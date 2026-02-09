@@ -99,7 +99,7 @@ class E2AcquisitionConfig:
     nsamples: int = 2048
     nblocks: int = 6
     stale_blocks: int = 1
-    source_power_dbm: float = -10.0
+    source_power_dbm: float = -30.0
 
     experiment_id: str = "E2"
     raw_dir: Path = DEFAULT_E2_RAW_DIR
