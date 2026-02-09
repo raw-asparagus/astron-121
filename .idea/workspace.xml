@@ -4,12 +4,384 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1006305a-a351-41ba-bb3c-24ef1656b7ec" name="Changes" comment="[LAB01] Update experiment 1 data acquisition script">
+    <list default="true" id="1006305a-a351-41ba-bb3c-24ef1656b7ec" name="Changes" comment="[LAB01] Simplify experiment 1 data acquisition script to remove handshake responses for USBTMC protocol">
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1043478_idx12_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1043478_idx12_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1043478_idx12_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1043478_idx12_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1130435_idx13_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1130435_idx13_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1130435_idx13_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1130435_idx13_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1217391_idx14_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1217391_idx14_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1217391_idx14_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1217391_idx14_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1304348_idx15_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1304348_idx15_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1304348_idx15_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1304348_idx15_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1391304_idx16_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1391304_idx16_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1391304_idx16_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1391304_idx16_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1478261_idx17_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1478261_idx17_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1478261_idx17_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1478261_idx17_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1565217_idx18_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1565217_idx18_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1565217_idx18_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1565217_idx18_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1652174_idx19_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1652174_idx19_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1652174_idx19_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1652174_idx19_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1739130_idx20_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1739130_idx20_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1739130_idx20_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1739130_idx20_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f173913_idx02_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f173913_idx02_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f173913_idx02_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f173913_idx02_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1826087_idx21_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1826087_idx21_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1826087_idx21_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1826087_idx21_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1913043_idx22_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1913043_idx22_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1913043_idx22_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f1913043_idx22_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f2000000_idx23_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f2000000_idx23_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f2000000_idx23_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f2000000_idx23_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f260870_idx03_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f260870_idx03_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f260870_idx03_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f260870_idx03_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f347826_idx04_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f347826_idx04_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f347826_idx04_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f347826_idx04_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f434783_idx05_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f434783_idx05_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f434783_idx05_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f434783_idx05_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f521739_idx06_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f521739_idx06_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f521739_idx06_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f521739_idx06_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f608696_idx07_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f608696_idx07_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f608696_idx07_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f608696_idx07_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f695652_idx08_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f695652_idx08_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f695652_idx08_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f695652_idx08_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f782609_idx09_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f782609_idx09_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f782609_idx09_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f782609_idx09_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f869565_idx10_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f869565_idx10_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f869565_idx10_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f869565_idx10_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f86957_idx01_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f86957_idx01_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f86957_idx01_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f86957_idx01_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f956522_idx11_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f956522_idx11_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f956522_idx11_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1000000_f956522_idx11_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1113043_idx08_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1113043_idx08_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1113043_idx08_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1113043_idx08_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1252174_idx09_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1252174_idx09_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1252174_idx09_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1252174_idx09_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1391304_idx10_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1391304_idx10_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1391304_idx10_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1391304_idx10_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f139130_idx01_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f139130_idx01_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f139130_idx01_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f139130_idx01_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1530435_idx11_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1530435_idx11_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1530435_idx11_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1530435_idx11_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1669565_idx12_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1669565_idx12_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1669565_idx12_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1669565_idx12_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1808696_idx13_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1808696_idx13_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1808696_idx13_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1808696_idx13_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1947826_idx14_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1947826_idx14_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1947826_idx14_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f1947826_idx14_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2086957_idx15_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2086957_idx15_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2086957_idx15_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2086957_idx15_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2226087_idx16_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2226087_idx16_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2226087_idx16_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2226087_idx16_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2365217_idx17_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2365217_idx17_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2365217_idx17_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2365217_idx17_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2504348_idx18_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2504348_idx18_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2504348_idx18_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2504348_idx18_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2643478_idx19_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2643478_idx19_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2643478_idx19_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2643478_idx19_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2782609_idx20_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2782609_idx20_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2782609_idx20_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2782609_idx20_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f278261_idx02_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f278261_idx02_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f278261_idx02_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f278261_idx02_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2921739_idx21_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2921739_idx21_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2921739_idx21_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f2921739_idx21_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f3060870_idx22_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f3060870_idx22_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f3060870_idx22_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f3060870_idx22_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f3200000_idx23_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f3200000_idx23_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f3200000_idx23_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f3200000_idx23_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f417391_idx03_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f417391_idx03_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f417391_idx03_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f417391_idx03_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f556522_idx04_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f556522_idx04_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f556522_idx04_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f556522_idx04_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f695652_idx05_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f695652_idx05_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f695652_idx05_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f695652_idx05_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f834783_idx06_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f834783_idx06_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f834783_idx06_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f834783_idx06_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f973913_idx07_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f973913_idx07_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f973913_idx07_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr1600000_f973913_idx07_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1043478_idx05_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1043478_idx05_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1043478_idx05_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1043478_idx05_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1252174_idx06_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1252174_idx06_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1252174_idx06_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1252174_idx06_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1460870_idx07_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1460870_idx07_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1460870_idx07_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1460870_idx07_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1669565_idx08_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1669565_idx08_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1669565_idx08_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1669565_idx08_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1878261_idx09_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1878261_idx09_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1878261_idx09_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f1878261_idx09_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2086957_idx10_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2086957_idx10_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2086957_idx10_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2086957_idx10_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f208696_idx01_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f208696_idx01_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f208696_idx01_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f208696_idx01_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2295652_idx11_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2295652_idx11_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2295652_idx11_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2295652_idx11_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2504348_idx12_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2504348_idx12_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2504348_idx12_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2504348_idx12_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2713043_idx13_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2713043_idx13_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2713043_idx13_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2713043_idx13_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2921739_idx14_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2921739_idx14_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2921739_idx14_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f2921739_idx14_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3130435_idx15_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3130435_idx15_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3130435_idx15_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3130435_idx15_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3339130_idx16_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3339130_idx16_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3339130_idx16_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3339130_idx16_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3547826_idx17_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3547826_idx17_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3547826_idx17_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3547826_idx17_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3756522_idx18_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3756522_idx18_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3756522_idx18_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3756522_idx18_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3965217_idx19_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3965217_idx19_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3965217_idx19_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f3965217_idx19_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4173913_idx20_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4173913_idx20_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4173913_idx20_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4173913_idx20_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f417391_idx02_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f417391_idx02_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f417391_idx02_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f417391_idx02_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4382609_idx21_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4382609_idx21_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4382609_idx21_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4382609_idx21_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4591304_idx22_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4591304_idx22_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4591304_idx22_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4591304_idx22_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4800000_idx23_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4800000_idx23_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4800000_idx23_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f4800000_idx23_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f626087_idx03_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f626087_idx03_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f626087_idx03_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f626087_idx03_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f834783_idx04_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f834783_idx04_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f834783_idx04_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr2400000_f834783_idx04_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1113043_idx04_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1113043_idx04_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1113043_idx04_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1113043_idx04_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1391304_idx05_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1391304_idx05_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1391304_idx05_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1391304_idx05_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1669565_idx06_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1669565_idx06_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1669565_idx06_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1669565_idx06_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1947826_idx07_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1947826_idx07_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1947826_idx07_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f1947826_idx07_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2226087_idx08_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2226087_idx08_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2226087_idx08_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2226087_idx08_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2504348_idx09_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2504348_idx09_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2504348_idx09_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2504348_idx09_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2782609_idx10_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2782609_idx10_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2782609_idx10_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f2782609_idx10_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f278261_idx01_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f278261_idx01_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f278261_idx01_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f278261_idx01_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3060870_idx11_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3060870_idx11_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3060870_idx11_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3060870_idx11_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3339130_idx12_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3339130_idx12_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3339130_idx12_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3339130_idx12_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3617391_idx13_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3617391_idx13_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3617391_idx13_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3617391_idx13_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3895652_idx14_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3895652_idx14_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3895652_idx14_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f3895652_idx14_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4173913_idx15_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4173913_idx15_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4173913_idx15_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4173913_idx15_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4452174_idx16_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4452174_idx16_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4452174_idx16_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4452174_idx16_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4730435_idx17_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4730435_idx17_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4730435_idx17_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f4730435_idx17_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5008696_idx18_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5008696_idx18_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5008696_idx18_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5008696_idx18_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5286957_idx19_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5286957_idx19_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5286957_idx19_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5286957_idx19_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5565217_idx20_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5565217_idx20_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5565217_idx20_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5565217_idx20_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f556522_idx02_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f556522_idx02_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f556522_idx02_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f556522_idx02_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5843478_idx21_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5843478_idx21_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5843478_idx21_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f5843478_idx21_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f6121739_idx22_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f6121739_idx22_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f6121739_idx22_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f6121739_idx22_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f6400000_idx23_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f6400000_idx23_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f6400000_idx23_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f6400000_idx23_fir_default__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f834783_idx03_fir_alias_hack__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f834783_idx03_fir_alias_hack__target.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f834783_idx03_fir_default__baseline.npz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e1/e1_sr3200000_f834783_idx03_fir_default__target.npz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/01.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/01/01.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/01/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/AGENTS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e1_acquire.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e1_acquire.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/control/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/acquisition.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/control/acquisition.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/siggen.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/control/siggen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/sdr.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/control/sdr.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/01/tests/unit/test_control_acquisition.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/tests/unit/test_control_acquisition.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_control_siggen.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/tests/unit/test_control_siggen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_control_sdr.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/tests/unit/test_control_sdr.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +462,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770601450934</updated>
-      <workItem from="1770601451980" duration="1316000" />
+      <workItem from="1770601451980" duration="3286000" />
     </task>
     <task id="LOCAL-00001" summary="[LAB01] Initial clone from working ugradio branch">
       <option name="closed" value="true" />
@@ -108,7 +480,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770602239956</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="[LAB01] Simplify experiment 1 data acquisition script to remove handshake responses for USBTMC protocol">
+      <option name="closed" value="true" />
+      <created>1770602794584</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1770602794584</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -117,6 +497,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="[LAB01] Initial clone from working ugradio branch" />
     <MESSAGE value="[LAB01] Update experiment 1 data acquisition script" />
-    <option name="LAST_COMMIT_MESSAGE" value="[LAB01] Update experiment 1 data acquisition script" />
+    <MESSAGE value="[LAB01] Simplify experiment 1 data acquisition script to remove handshake responses for USBTMC protocol" />
+    <option name="LAST_COMMIT_MESSAGE" value="[LAB01] Simplify experiment 1 data acquisition script to remove handshake responses for USBTMC protocol" />
   </component>
 </project>

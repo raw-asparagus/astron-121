@@ -32,7 +32,7 @@ class SDRCaptureConfig:
     gain: float = 0.0
     fir_coeffs: np.ndarray | None = None
     nsamples: int = 2048
-    nblocks: int = 11
+    nblocks: int = 6
     stale_blocks: int = 1
     timeout_s: float = 10.0
     max_retries: int = 3
@@ -77,7 +77,7 @@ def acquire_sdr_capture(
     -----
     ``nblocks`` is requested from the SDR directly. The first ``stale_blocks``
     blocks are discarded before metrics are computed and before data is returned.
-    For E1 this is ``nblocks=11`` and ``stale_blocks=1``, leaving 10 clean blocks.
+    For E1 this is ``nblocks=6`` and ``stale_blocks=1``, leaving 5 clean blocks.
     """
 
     if config.sample_rate_hz <= 0.0:

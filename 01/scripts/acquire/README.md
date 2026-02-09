@@ -7,6 +7,9 @@ Place SDR/signal-generator control scripts here for lab data collection.
 `run_e1_acquire.py` runs Experiment 1 physical data capture with:
 - N9310A via direct USBTMC (`/dev/usbtmc0`)
 - SDR direct mode (`device_index=0`, `direct=True`, `gain=0`)
-- stale-buffer policy (`nblocks=11`, drop first, keep 10)
-- baseline + target run pairing per combination
+- stale-buffer policy (`nblocks=6`, drop first, keep 5)
+- fixed power tiers by FIR mode:
+  - `default`: `-10, 0, +10 dBm`
+  - `alias_hack`: `-50, -40, -30 dBm`
+- `0 Hz` frequency point omitted for physical runs
 - resume-safe skip logic from progress CSV

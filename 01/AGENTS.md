@@ -89,6 +89,11 @@ Notebook integration updates:
 - `labs/01/01.ipynb` now includes SIM runner code blocks for E1-E7 and
   simulation caption markdown blocks for all generated simulation figures
   (F2 through F18).
+- E1 writeup sections in `labs/01/01.ipynb` are synchronized with the current
+  physical acquisition contract:
+  - `nblocks=6`, drop first stale block, save/use `5` blocks.
+  - fixed FIR-mode power tiers (`default: -10/0/+10 dBm`, `alias_hack: -50/-40/-30 dBm`).
+  - `0 Hz` omitted in physical E1 runs; no bisection/target-RMS search.
 - F3 was moved from E1 outputs to Calibration/Pre-Checks context in the
   notebook structure and SIM runner flow.
 - Section 3 ("Theory and Modeling Framework") was expanded into a full
@@ -119,11 +124,13 @@ Physical acquisition infrastructure for E1 is now implemented:
     within the query timeout budget instead of immediate hard-fail.
 - SDR wrapper:
   - `control/sdr.py` provides direct-sampling capture with stale-buffer handling
-    (`nblocks=11`, drop first, keep 10), ADC guard metrics, and capture retries.
+    (`nblocks=6`, drop first, keep 5), ADC guard metrics, and capture retries.
 - Acquisition orchestrator:
-  - `control/acquisition.py` implements E1 sweep execution, baseline/target run
-    pairing, bisection search, resume-safe progress logging, NPZ metadata dumps,
+  - `control/acquisition.py` implements E1 sweep execution with fixed power tiers
+    per FIR mode, run-level resume-safe progress logging, NPZ metadata dumps,
     and T2 manifest append/skip behavior.
+  - E1 acquisition omits exact `0 Hz` frequency points in physical capture
+    because the connected signal generator cannot set `0 Hz`.
   - Default contracts are established in-package:
     - raw output dir: `data/raw/e1`
     - T2 manifest: `data/manifests/t2_e1_runs.csv`
@@ -189,26 +196,25 @@ These decisions were requested explicitly by the user:
 - Signal-generator settling delay: `1s` after set commands.
 - SDR E1 capture settings:
   - `device_index=0`, `direct=True`, `gain=0.0`, `nsamples=2048`
-  - request `nblocks=11`, drop first stale block, save/use `10` blocks.
+  - request `nblocks=6`, drop first stale block, save/use `5` blocks.
 - E1 FIR modes must be captured as two sets:
   - default `fir_coeffs=None`
   - alias-hack `fir_coeffs=[0, ..., 0, 2047]`.
 - E1 sweep grid:
   - sample rates: `1.0, 1.6, 2.4, 3.2 MHz`
   - per sample rate, signal frequencies are `24` linear points over
-    `[0, 4 f_Nyquist]` inclusive.
-- ADC power-search policy per `(sample_rate, signal_frequency, fir_mode)`:
-  - always capture/save baseline at `-30 dBm`.
-  - target setpoint uses bisection in `[-30, +10] dBm`, precision `0.1 dBm`.
-  - stop on the first valid capture with `ADCrms in 65 +/- 5`.
-  - if baseline is already in target band, duplicate baseline as target run.
-  - if clipping occurs at `-30 dBm`, classify as `unachievable` and retain
-    baseline + closest available target record.
-  - if target band is never reached by `+10 dBm`, classify as `closest_only`.
+    `[0, 4 f_Nyquist]`, but `0 Hz` is omitted in physical runs.
+- Fixed power-tier policy per `(sample_rate, signal_frequency, fir_mode)`:
+  - no bisection search and no target-RMS scanning.
+  - capture all tiers for each FIR mode:
+    - `default` FIR: `-10, 0, +10 dBm`
+    - `alias_hack` FIR: `-50, -40, -30 dBm`.
+  - each tier run keeps ADC quality labels (`passes_guard`, `is_clipped`) in
+    metadata/progress for downstream filtering.
 - Persistence/resume policy:
-  - deterministic run IDs/paths per combination and run kind;
+  - deterministic run IDs/paths per combination and power tier;
   - verbose metadata written in every NPZ;
-  - completed combinations are skipped on resume (duplicate-safe behavior).
+  - completed run IDs are skipped on resume (duplicate-safe behavior).
 
 ## Plotting Requirements
 Plotting functions should stay Axes-first and composable:

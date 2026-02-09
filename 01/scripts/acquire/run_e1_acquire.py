@@ -34,14 +34,17 @@ def build_parser() -> argparse.ArgumentParser:
         "--n-frequency-points",
         type=int,
         default=24,
-        help="Linear points over [0, 4 f_Nyquist] per sample rate (default: 24).",
+        help=(
+            "Linear points over [0, 4 f_Nyquist] before filtering; "
+            "0 Hz is omitted in physical capture (default: 24)."
+        ),
     )
     parser.add_argument("--nsamples", type=int, default=2048, help="Samples per block (default: 2048).")
     parser.add_argument(
         "--nblocks",
         type=int,
-        default=11,
-        help="Requested SDR blocks before stale-drop (default: 11; first block dropped -> 10 saved).",
+        default=6,
+        help="Requested SDR blocks before stale-drop (default: 6; first block dropped -> 5 saved).",
     )
     parser.add_argument(
         "--stale-blocks",
@@ -119,15 +122,20 @@ def main() -> None:
         guard_max_attempts=int(args.guard_max_attempts),
     )
     progress = run_e1_acquisition(config)
-    completed = progress.loc[progress["final_status"].isin(["ok_target", "ok_target_from_baseline"])]
-    closest_only = progress.loc[progress["final_status"] == "closest_only"]
-    unachievable = progress.loc[progress["final_status"] == "unachievable"]
+    captured = progress.loc[progress["final_status"] == "captured"]
+    captured_guard_fail = progress.loc[progress["final_status"] == "captured_guard_fail"]
+    skipped_existing = progress.loc[progress["final_status"] == "skip_existing_npz"]
     error_io = progress.loc[progress["final_status"] == "error_io"]
     print(f"Progress rows: {len(progress)}")
-    print(f"Completed target-band combos: {len(completed)}")
-    print(f"Closest-only combos: {len(closest_only)}")
-    print(f"Unachievable combos: {len(unachievable)}")
-    print(f"IO-error combos: {len(error_io)}")
+    print(f"Captured runs: {len(captured)}")
+    print(f"Captured runs (guard-fail): {len(captured_guard_fail)}")
+    print(f"Skipped existing NPZ runs: {len(skipped_existing)}")
+    print(f"IO-error runs: {len(error_io)}")
+    if "fir_mode" in progress.columns:
+        by_fir = progress.groupby(["fir_mode", "final_status"]).size()
+        print("Counts by fir_mode/status:")
+        for (fir_mode, status), count in by_fir.items():
+            print(f"  fir_mode={fir_mode}, status={status}: {int(count)}")
     print(f"Progress CSV: {config.progress_path}")
     print(f"T2 manifest CSV: {config.t2_manifest_path}")
     print(f"Raw NPZ dir: {config.raw_dir}")

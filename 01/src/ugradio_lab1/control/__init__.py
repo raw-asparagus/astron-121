@@ -7,6 +7,7 @@ from ugradio_lab1.control.acquisition import (
     E1AcquisitionConfig,
     e1_fir_modes,
     e1_frequency_grid_hz,
+    e1_power_tiers_dbm,
     run_e1_acquisition,
 )
 from ugradio_lab1.control.sdr import (
@@ -33,5 +34,6 @@ __all__ = [
     "alias_hack_fir_coeffs",
     "e1_fir_modes",
     "e1_frequency_grid_hz",
+    "e1_power_tiers_dbm",
     "run_e1_acquisition",
 ]

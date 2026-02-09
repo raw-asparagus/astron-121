@@ -31,11 +31,11 @@ def test_acquire_sdr_capture_drops_stale_first_block() -> None:
     config = SDRCaptureConfig(
         sample_rate_hz=1.0e6,
         nsamples=16,
-        nblocks=11,
+        nblocks=6,
         stale_blocks=1,
     )
     result = acquire_sdr_capture(config, sdr_factory=_fake_factory)
-    assert result.blocks.shape == (10, 16)
+    assert result.blocks.shape == (5, 16)
     assert result.requested_sample_rate_hz == 1.0e6
     assert result.actual_sample_rate_hz == 1.0e6 - 123.0
 
