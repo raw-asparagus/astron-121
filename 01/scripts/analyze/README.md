@@ -51,3 +51,23 @@ Example:
 cd labs/01
 /Users/junruiting/GitHub/ugradio/.venv/bin/python3 scripts/analyze/run_e3_pipeline.py
 ```
+
+## E5 Physical Pipeline
+
+`run_e5_pipeline.py` consumes raw E5 NPZ input (default `data/raw/e5.tar.gz`) and writes:
+- `data/interim/e5/run_catalog.csv`
+- `data/interim/e5/qc_catalog.csv`
+- `data/interim/e5/noise_stats.csv`
+- `data/interim/e5/radiometer_curve.csv`
+- `data/processed/e5/tables/T2_e5_runs.csv`
+- `data/processed/e5/tables/T6_e5_radiometer_summary.csv`
+- `report/figures/F10_noise_histogram_physical.png`
+- `report/figures/F11_radiometer_scaling_physical.png`
+- `report/figures/F12_acf_spectrum_consistency_physical.png`
+
+Example:
+
+```bash
+cd labs/01
+/Users/junruiting/GitHub/ugradio/.venv/bin/python3 scripts/analyze/run_e5_pipeline.py
+```

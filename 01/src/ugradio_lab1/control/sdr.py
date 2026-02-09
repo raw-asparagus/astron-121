@@ -29,6 +29,7 @@ class SDRCaptureConfig:
     sample_rate_hz: float
     device_index: int = 0
     direct: bool = True
+    center_frequency_hz: float = 0.0
     gain: float = 0.0
     fir_coeffs: np.ndarray | None = None
     nsamples: int = 2048
@@ -82,6 +83,10 @@ def acquire_sdr_capture(
 
     if config.sample_rate_hz <= 0.0:
         raise ValueError("sample_rate_hz must be positive.")
+    if config.center_frequency_hz < 0.0:
+        raise ValueError("center_frequency_hz cannot be negative.")
+    if not config.direct and config.center_frequency_hz <= 0.0:
+        raise ValueError("center_frequency_hz must be positive when direct=False.")
     if config.nsamples <= 0:
         raise ValueError("nsamples must be positive.")
     if config.nblocks <= 0:
@@ -136,7 +141,7 @@ def _capture_once(
     radio = constructor(
         device_index=config.device_index,
         direct=config.direct,
-        center_freq=0.0,
+        center_freq=float(config.center_frequency_hz),
         sample_rate=float(config.sample_rate_hz),
         gain=float(config.gain),
         fir_coeffs=config.fir_coeffs,

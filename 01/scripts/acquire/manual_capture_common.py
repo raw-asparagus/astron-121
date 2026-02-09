@@ -87,15 +87,24 @@ def resolve_required_choice(
     name: str,
     choices: Sequence[str],
     prompt: str,
+    case_sensitive: bool = True,
 ) -> str:
     normalized_choices = tuple(str(choice) for choice in choices)
     if value is None:
         value = _prompt_if_interactive(prompt)
     normalized = str(value).strip()
-    if normalized not in normalized_choices:
+    if case_sensitive:
+        if normalized not in normalized_choices:
+            allowed = ", ".join(normalized_choices)
+            raise ValueError(f"{name} must be one of: {allowed}.")
+        return normalized
+
+    lookup = {choice.lower(): choice for choice in normalized_choices}
+    key = normalized.lower()
+    if key not in lookup:
         allowed = ", ".join(normalized_choices)
         raise ValueError(f"{name} must be one of: {allowed}.")
-    return normalized
+    return lookup[key]
 
 
 def resolve_required_float(
@@ -252,6 +261,7 @@ def _capture_with_guard(
                 sample_rate_hz=float(params.sample_rate_hz),
                 device_index=int(params.sdr_device_index),
                 direct=bool(params.sdr_direct),
+                center_frequency_hz=float(params.center_frequency_hz),
                 gain=float(params.sdr_gain_db),
                 fir_coeffs=None,
                 nsamples=int(params.nsamples),
@@ -462,3 +472,27 @@ def match_tone_to_reference(reference: ToneParams, *, label: str) -> ToneParams:
         frequency_hz=float(reference.frequency_hz),
         power_dbm=float(reference.power_dbm),
     )
+
+
+def build_signed_delta_sweep(
+    max_abs_delta_hz: float,
+    *,
+    n_points: int = 2,
+    include_zero: bool = False,
+) -> tuple[float, ...]:
+    """Build a signed delta sweep from ``-abs(delta)`` to ``+abs(delta)``."""
+
+    max_abs = float(max_abs_delta_hz)
+    points = int(n_points)
+    if max_abs <= 0.0:
+        raise ValueError("delta_f_hz must be positive.")
+    if points < 2:
+        raise ValueError("delta_points must be >= 2.")
+
+    values = np.linspace(-max_abs, max_abs, points, endpoint=True, dtype=float).tolist()
+    if include_zero:
+        return tuple(float(value) for value in values)
+    filtered = [float(value) for value in values if not np.isclose(value, 0.0, atol=1e-12)]
+    if not filtered:
+        raise ValueError("delta sweep must contain at least one non-zero signed delta.")
+    return tuple(filtered)

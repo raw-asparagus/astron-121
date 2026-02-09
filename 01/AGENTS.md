@@ -207,9 +207,30 @@ Physical acquisition infrastructure for E2 is now implemented:
     (`PIPELINE_RUNNER`) that ingests `data/raw/e3.tar.gz`, writes E3
     interim/processed artifacts, and renders physical F5/F6 outputs inline.
   - Reproducibility appendix now includes the E3 physical pipeline command.
+- E5 post-acquisition data pipeline is implemented:
+  - Reusable module: `src/ugradio_lab1/pipeline/e5.py`
+  - CLI runner: `scripts/analyze/run_e5_pipeline.py`
+  - Pipeline can ingest E5 raw data directly from `data/raw/e5.tar.gz` (or a raw NPZ directory).
+  - Generated artifacts:
+    - `data/interim/e5/run_catalog.csv`
+    - `data/interim/e5/qc_catalog.csv`
+    - `data/interim/e5/noise_stats.csv`
+    - `data/interim/e5/radiometer_curve.csv`
+    - `data/processed/e5/tables/T2_e5_runs.csv`
+    - `data/processed/e5/tables/T6_e5_radiometer_summary.csv`
+    - `report/figures/F10_noise_histogram_physical.png`
+    - `report/figures/F11_radiometer_scaling_physical.png`
+    - `report/figures/F12_acf_spectrum_consistency_physical.png`
+- Pipeline unit tests added:
+  - `tests/unit/test_pipeline_e5.py`
+- Notebook integration updates:
+  - `labs/01/01.ipynb` now includes an E5 physical pipeline integration block
+    (`PIPELINE_RUNNER`) that ingests `data/raw/e5.tar.gz`, writes E5
+    interim/processed artifacts, and renders physical F10/F11/F12 outputs inline.
+  - Reproducibility appendix now includes the E5 physical pipeline command.
 
 Physical acquisition scripts for E3-E7 are now implemented:
-- New one-shot acquisition scripts:
+- New acquisition scripts:
   - `scripts/acquire/run_e3_acquire.py`
   - `scripts/acquire/run_e4_acquire.py`
   - `scripts/acquire/run_e5_acquire.py`
@@ -218,12 +239,24 @@ Physical acquisition scripts for E3-E7 are now implemented:
 - Shared helper module:
   - `scripts/acquire/manual_capture_common.py` centralizes:
     - CLI + interactive prompt resolution for required parameters,
-    - SG1/SG2 validation,
-    - one-shot SDR guarded capture,
+    - tone/SG metadata validation,
+    - single-run SDR guarded capture primitive (used by one-shot/sweep runners),
     - NPZ metadata persistence,
     - T2 manifest append.
-  - E3-E7 contract assumes manual analog SG setup only; SG frequencies/powers
-    are captured as metadata and are not programmed from the RPi.
+  - E3/E5/E6/E7 are metadata-first manual SG workflows.
+  - E4 now has center-frequency-driven automatic tone planning and supports
+    optional SG USBTMC auto-programming.
+    - New planning helpers: `src/ugradio_lab1/control/e4_planning.py`
+      - `leakage_tone_from_center`
+      - `resolution_tones_from_center`
+    - `run_e4_acquire.py` behavior:
+      - leakage mode uses one SG tone per run:
+        `f = (k + epsilon) * (f_s / N)` (with `k` fixed or auto-derived from center).
+      - resolution mode uses two SG tones per run:
+        `f1 = f_center - delta/2`, `f2 = f_center + delta/2`.
+      - optional SG hardware programming enabled by `--auto-program-siggen`.
+  - Unit tests added for E4 planning math:
+    - `tests/unit/test_control_e4_planning.py`
 
 ## Locked-In API Decisions (Do Not Revert)
 These decisions were requested explicitly by the user:
@@ -320,16 +353,25 @@ These decisions were requested explicitly by the user:
   - verbose metadata written in every NPZ;
   - completed run IDs are skipped on resume (duplicate-safe behavior).
 
-12. E3-E7 physical acquisition scripts use manual non-SDR parameter entry.
+12. E3-E7 physical acquisition scripts use CLI/prompt-driven parameter entry.
 - Scripts must validate CLI arguments and prompt for missing required values.
 - Required run-level parameters include `Vrms` and SG settings where applicable.
 - SG usage by experiment:
   - E3: SG1 required, SG2 optional/required by mode.
   - E4: default sweep runner (`50` runs) over mixed power-of-two and non-power-of-two
-    bin counts (`N < 16384`); SG2 is manual reference and SG1 is matched to SG2.
+    bin counts (`N < 16384`) with center-frequency-driven auto planning.
+    - leakage: one-SG tone, `f = (k + epsilon) * (f_s / N)`.
+    - resolution: two-SG tones, `f1 = f_center - delta/2`, `f2 = f_center + delta/2`.
+    - optional USBTMC programming (`--auto-program-siggen`) can set SG frequencies/powers each run.
   - E5: no SG required.
-  - E6: SG2 manual reference required; SG1 is matched to SG2.
-  - E7: SG2 manual reference required; SG1 is matched to SG2.
+  - E6: signed-`delta_nu` sweep between `- |delta|` and `+ |delta|` using SG2 as
+    manual RF reference; SG1 (LO) power matches SG2 and frequency follows
+    `f1 = f2 - signed_delta`.
+  - E7: signed-`delta_nu` sweep between `- |delta|` and `+ |delta|` with SG2 as
+    manual reference; SG1 is derived from SG2, and each run records whether the
+    single-SDR capture channel is `I`/real or `Q`/imaginary voltage.
+    In `r820t_internal`, default profile uses `nu=1420.405751768 MHz`,
+    `|delta|=0.05*nu`, forces `direct=False`, and sets SDR LO center to `nu`.
 
 13. E1 post-processing entrypoint and artifact contract is established.
 - Raw starting point defaults to `data/raw/e1.tar.gz` (direct acquisition output tarball).
@@ -362,6 +404,20 @@ These decisions were requested explicitly by the user:
   - `data/processed/e3/tables/T2_e3_runs.csv`
   - `report/figures/F5_complex_voltage_components_physical.png`
   - `report/figures/F6_voltage_vs_power_physical.png`.
+
+16. E5 post-processing entrypoint and artifact contract is established.
+- Raw starting point defaults to `data/raw/e5.tar.gz` (direct acquisition output tarball).
+- The reproducible E5 processing runner is `scripts/analyze/run_e5_pipeline.py`.
+- Required pipeline outputs for notebook/report integration:
+  - `data/interim/e5/run_catalog.csv`
+  - `data/interim/e5/qc_catalog.csv`
+  - `data/interim/e5/noise_stats.csv`
+  - `data/interim/e5/radiometer_curve.csv`
+  - `data/processed/e5/tables/T2_e5_runs.csv`
+  - `data/processed/e5/tables/T6_e5_radiometer_summary.csv`
+  - `report/figures/F10_noise_histogram_physical.png`
+  - `report/figures/F11_radiometer_scaling_physical.png`
+  - `report/figures/F12_acf_spectrum_consistency_physical.png`.
 
 ## Plotting Requirements
 Plotting functions should stay Axes-first and composable:

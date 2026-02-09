@@ -31,9 +31,9 @@ Place SDR/signal-generator control scripts here for lab data collection.
 - constant source power (`-10 dBm` default)
 - resume-safe skip logic from progress CSV
 
-## E3-E7 One-Shot Runners
+## E3-E7 Runners
 
-These scripts are for non-sweep, one-shot physical captures:
+These scripts are for E3-E7 physical captures:
 - `run_e3_acquire.py`
 - `run_e4_acquire.py`
 - `run_e5_acquire.py`
@@ -43,14 +43,22 @@ These scripts are for non-sweep, one-shot physical captures:
 Shared behavior:
 - Validate CLI inputs.
 - Prompt interactively for missing required values (e.g., `Vrms`, SG settings).
-- Capture one run with SDR guard-based recapture attempts.
+- Capture SDR data with guard-based recapture attempts.
 - Save NPZ data + metadata and append one T2 manifest row.
-- Signal setup is manual analog for E3-E7 (SG values are metadata inputs only).
+- Signal setup is manual analog by default.
+- `run_e4_acquire.py` additionally supports optional SG USBTMC auto-programming.
 
 Parameter patterns:
 - E3: `Vrms`, SG1 required; SG2 required in `two_tone` mode.
-- E4: sweep runner by default (`50` runs) with mixed powers-of-two/non-powers-of-two bins (`N < 16384`);
-  SG2 is the manual reference input and SG1 is auto-matched to SG2.
+- E4: sweep runner by default (`50` runs) with mixed powers-of-two/non-powers-of-two bins (`N < 16384`).
+  Tone frequencies are auto-derived from `center_frequency_hz`:
+  - leakage mode (single-SG): `f = (k + epsilon) * (f_s / N)`
+  - resolution mode (two-SG): `f1 = f_center - delta/2`, `f2 = f_center + delta/2`
+  Optional SG programming can be enabled with `--auto-program-siggen`.
 - E5: `Vrms` and noise-source mode; no signal generator required.
-- E6: `Vrms`, SG2 manual reference required; SG1 (LO) auto-matches SG2.
-- E7: `Vrms`, SG2 manual reference required; SG1 auto-matches SG2 (SG2 used as RF in external modes).
+- E6: signed-`delta_nu` sweep between `- |delta|` and `+ |delta|`; SG2 is manual RF reference and
+  SG1 (LO) power matches SG2 while frequency follows `f1 = f2 - signed_delta`.
+- E7: signed-`delta_nu` sweep between `- |delta|` and `+ |delta|`; prompts whether the single SDR
+  capture is `I`/real or `Q`/imaginary voltage.
+  - `r820t_internal` mode defaults to `|delta| = 0.05 * nu` with
+    `nu = 1420.405751768 MHz`, forces `direct=False`, and sets SDR LO center to `nu`.

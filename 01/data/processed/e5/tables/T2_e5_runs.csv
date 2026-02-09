@@ -1,0 +1,11 @@
+run_id,experiment,sample_rate_hz,center_frequency_hz,tones_hz,source_power_dbm,mixer_config,cable_config,n_samples,run_kind,status,n_blocks_saved,sample_rate_hz_requested,sample_rate_hz_actual,sample_rate_error_hz,target_vrms_v,noise_source,notes,qc_analysis_pass,qc_recommended_pass
+e5_20260209T060850Z,E5,3200000.0,0.0,[],,manual_noise_source,manual_noise_source,2048,physical_noise_acf,captured_guard_fail,5,3200000.0,3200000.0,0.0,0.014,lab_noise_generator,,True,False
+e5_20260209T060918Z,E5,3200000.0,0.0,[],,manual_noise_source,manual_noise_source,2048,physical_noise_acf,captured_guard_fail,5,3200000.0,3200000.0,0.0,0.014,lab_noise_generator,,True,False
+e5_20260209T060931Z,E5,3200000.0,0.0,[],,manual_noise_source,manual_noise_source,2048,physical_noise_acf,captured_guard_fail,5,3200000.0,3200000.0,0.0,0.014,lab_noise_generator,,True,False
+e5_20260209T060947Z,E5,3200000.0,0.0,[],,manual_noise_source,manual_noise_source,2048,physical_noise_acf,captured_guard_fail,5,3200000.0,3200000.0,0.0,0.014,lab_noise_generator,,True,False
+e5_20260209T061000Z,E5,3200000.0,0.0,[],,manual_noise_source,manual_noise_source,2048,physical_noise_acf,captured_guard_fail,5,3200000.0,3200000.0,0.0,0.014,lab_noise_generator,,True,False
+e5_20260209T061351Z,E5,3200000.0,0.0,[],,manual_noise_source,manual_noise_source,2048,physical_noise_acf,captured_guard_fail,5,3200000.0,3200000.0,0.0,0.0,terminated_input,,True,False
+e5_20260209T061728Z,E5,3200000.0,0.0,[],,manual_noise_source,manual_noise_source,2048,physical_noise_acf,captured_guard_fail,5,3200000.0,3200000.0,0.0,0.0,terminated_input,,True,False
+e5_20260209T061811Z,E5,3200000.0,0.0,[],,manual_noise_source,manual_noise_source,2048,physical_noise_acf,captured_guard_fail,5,3200000.0,3200000.0,0.0,0.0,terminated_input,,True,False
+e5_20260209T061845Z,E5,3200000.0,0.0,[],,manual_noise_source,manual_noise_source,2048,physical_noise_acf,captured_guard_fail,5,3200000.0,3200000.0,0.0,0.0,terminated_input,,True,False
+e5_20260209T061859Z,E5,3200000.0,0.0,[],,manual_noise_source,manual_noise_source,2048,physical_noise_acf,captured_guard_fail,5,3200000.0,3200000.0,0.0,0.0,terminated_input,,True,False
