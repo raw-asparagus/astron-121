@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import numpy as np
 import pytest
 
 from ugradio_lab1.control.acquisition import (
     E1AcquisitionConfig,
+    E2AcquisitionConfig,
     e1_frequency_grid_hz,
     e1_power_tiers_dbm,
+    e2_frequency_grid_hz,
 )
 
 
@@ -39,3 +42,21 @@ def test_power_tiers_are_configurable() -> None:
     tiers = e1_power_tiers_dbm(config)
     assert tiers["default"] == (-12.0, -2.0, 8.0)
     assert tiers["alias_hack"] == (-55.0, -45.0, -35.0)
+
+
+def test_e2_frequency_grid_is_logspace_with_expected_endpoints() -> None:
+    grid = e2_frequency_grid_hz(1.0e6, n_points=50, min_frequency_hz=10_000.0, max_nyquist_multiple=4.0)
+    assert grid.shape == (50,)
+    assert grid[0] == pytest.approx(10_000.0)
+    assert grid[-1] == pytest.approx(2.0e6)  # 4 * f_Nyquist = 2 * fs
+    assert np.all(np.diff(grid) > 0.0)
+    log_steps = np.diff(np.log10(grid))
+    assert np.allclose(log_steps, log_steps[0])
+
+
+def test_e2_default_contract_matches_requested_setup() -> None:
+    config = E2AcquisitionConfig()
+    assert config.sample_rates_hz == (1.0e6, 1.6e6, 2.4e6, 3.2e6)
+    assert config.n_frequency_points == 50
+    assert config.sdr_direct is True
+    assert config.fir_coeffs is None

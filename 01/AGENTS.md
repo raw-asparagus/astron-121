@@ -142,6 +142,21 @@ Physical acquisition infrastructure for E1 is now implemented:
   - `tests/unit/test_control_acquisition.py`
   - `tests/unit/test_control_siggen.py`
 
+Physical acquisition infrastructure for E2 is now implemented:
+- Acquisition orchestrator:
+  - `control/acquisition.py` now includes `E2AcquisitionConfig`,
+    `e2_frequency_grid_hz`, and `run_e2_acquisition`.
+  - E2 sweep policy is logspace by default and uses one constant-power
+    capture per `(sample_rate, signal_frequency)` combination.
+  - Default E2 contracts are established in-package:
+    - raw output dir: `data/raw/e2`
+    - T2 manifest: `data/manifests/t2_e2_runs.csv`
+    - progress log: `data/manifests/e2_progress.csv`
+- Acquisition script:
+  - `scripts/acquire/run_e2_acquire.py` runs physical E2 acquisition from CLI.
+- Control package exports now include E2 acquisition symbols in
+  `control/__init__.py`.
+
 ## Locked-In API Decisions (Do Not Revert)
 These decisions were requested explicitly by the user:
 
@@ -213,6 +228,27 @@ These decisions were requested explicitly by the user:
     metadata/progress for downstream filtering.
 - Persistence/resume policy:
   - deterministic run IDs/paths per combination and power tier;
+  - verbose metadata written in every NPZ;
+  - completed run IDs are skipped on resume (duplicate-safe behavior).
+
+11. E2 physical acquisition contract is established for current runs.
+- Signal generator model/control: N9310A via direct USBTMC (`/dev/usbtmc0`).
+- Instrument and SDR call timeout/retry policy: timeout `10s`, max retries `3`.
+- Signal-generator settling delay: `1s` after set commands.
+- SDR E2 capture settings:
+  - `device_index=0`, `direct=True`, `gain=0.0`, `nsamples=2048`
+  - request `nblocks=6`, drop first stale block, save/use `5` blocks.
+- E2 FIR/default detector configuration:
+  - `fir_mode="default"`
+  - `fir_coeffs=None`.
+- E2 sweep grid policy:
+  - sample rates: `1.0, 1.6, 2.4, 3.2 MHz`
+  - per sample rate, signal frequencies are `50` logspace points over
+    `[10 kHz, 4 f_Nyquist]` (upper bound is `2 * f_s`).
+- E2 source power policy:
+  - one constant power per sweep point (`-10 dBm` default, configurable).
+- Persistence/resume policy:
+  - deterministic run IDs/paths per sweep point;
   - verbose metadata written in every NPZ;
   - completed run IDs are skipped on resume (duplicate-safe behavior).
 

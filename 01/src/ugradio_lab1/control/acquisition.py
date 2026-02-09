@@ -26,6 +26,9 @@ from ugradio_lab1.dataio.io_npz import load_npz_dataset, save_npz_dataset
 DEFAULT_E1_RAW_DIR = Path("data/raw/e1")
 DEFAULT_E1_T2_MANIFEST_PATH = Path("data/manifests/t2_e1_runs.csv")
 DEFAULT_E1_PROGRESS_PATH = Path("data/manifests/e1_progress.csv")
+DEFAULT_E2_RAW_DIR = Path("data/raw/e2")
+DEFAULT_E2_T2_MANIFEST_PATH = Path("data/manifests/t2_e2_runs.csv")
+DEFAULT_E2_PROGRESS_PATH = Path("data/manifests/e2_progress.csv")
 
 _COMPLETED_STATUSES = {"captured", "captured_guard_fail", "skip_existing_npz"}
 _PROGRESS_COLUMNS = (
@@ -86,6 +89,46 @@ class E1AcquisitionConfig:
 
 
 @dataclass(frozen=True)
+class E2AcquisitionConfig:
+    """Config for Experiment 2 physical bandpass acquisition."""
+
+    sample_rates_hz: tuple[float, ...] = (1.0e6, 1.6e6, 2.4e6, 3.2e6)
+    n_frequency_points: int = 50
+    log_min_frequency_hz: float = 10_000.0
+    log_max_nyquist_multiple: float = 4.0
+    nsamples: int = 2048
+    nblocks: int = 6
+    stale_blocks: int = 1
+    source_power_dbm: float = -10.0
+
+    experiment_id: str = "E2"
+    raw_dir: Path = DEFAULT_E2_RAW_DIR
+    t2_manifest_path: Path = DEFAULT_E2_T2_MANIFEST_PATH
+    progress_path: Path = DEFAULT_E2_PROGRESS_PATH
+
+    siggen_device_path: Path = Path("/dev/usbtmc0")
+    siggen_retry: SigGenRetryPolicy = field(default_factory=SigGenRetryPolicy)
+    siggen_settle_s: float = 1.0
+
+    sdr_device_index: int = 0
+    sdr_direct: bool = True
+    sdr_gain: float = 0.0
+    sdr_timeout_s: float = 10.0
+    sdr_max_retries: int = 3
+    sdr_retry_sleep_s: float = 0.25
+    guard_max_attempts: int = 3
+
+    center_frequency_hz: float = 0.0
+    cable_config: str = "siggen_to_sdr_direct"
+    mixer_config_prefix: str = "direct_sdr"
+    fir_mode: str = "default"
+    fir_coeffs: np.ndarray | None = None
+
+
+AcquisitionConfig = E1AcquisitionConfig | E2AcquisitionConfig
+
+
+@dataclass(frozen=True)
 class CaptureMeasurement:
     """One accepted capture measurement at one generator power."""
 
@@ -117,6 +160,31 @@ def e1_frequency_grid_hz(
     if include_zero_hz:
         return grid
     return grid[grid > 0.0]
+
+
+def e2_frequency_grid_hz(
+    sample_rate_hz: float,
+    *,
+    n_points: int = 50,
+    min_frequency_hz: float = 10_000.0,
+    max_nyquist_multiple: float = 4.0,
+) -> np.ndarray:
+    """Return logspace points over ``[min_frequency_hz, max_nyquist_multiple * f_Nyquist]``."""
+
+    if sample_rate_hz <= 0.0:
+        raise ValueError("sample_rate_hz must be positive.")
+    if n_points < 2:
+        raise ValueError("n_points must be >= 2.")
+    if min_frequency_hz <= 0.0:
+        raise ValueError("min_frequency_hz must be positive for logspace sweeps.")
+    if max_nyquist_multiple <= 0.0:
+        raise ValueError("max_nyquist_multiple must be positive.")
+
+    nyquist_hz = sample_rate_hz / 2.0
+    max_frequency_hz = float(max_nyquist_multiple) * nyquist_hz
+    if max_frequency_hz <= min_frequency_hz:
+        raise ValueError("max sweep frequency must be greater than min_frequency_hz.")
+    return np.geomspace(float(min_frequency_hz), float(max_frequency_hz), int(n_points), endpoint=True)
 
 
 def e1_fir_modes() -> dict[str, np.ndarray | None]:
@@ -151,7 +219,7 @@ def run_e1_acquisition(
     - ``f=0 Hz`` is skipped by construction.
     """
 
-    _validate_config(config)
+    _validate_e1_config(config)
     config.raw_dir.mkdir(parents=True, exist_ok=True)
     config.t2_manifest_path.parent.mkdir(parents=True, exist_ok=True)
     config.progress_path.parent.mkdir(parents=True, exist_ok=True)
@@ -172,7 +240,8 @@ def run_e1_acquisition(
             for fir_mode, fir_coeffs in fir_modes.items():
                 tiers = power_tiers[fir_mode]
                 for frequency_index, signal_frequency_hz in enumerate(frequency_grid):
-                    combo_key = _combo_key(
+                    combo_key = _combo_key_for_experiment(
+                        experiment_tag="e1",
                         sample_rate_hz=sample_rate_hz,
                         signal_frequency_hz=signal_frequency_hz,
                         fir_mode=fir_mode,
@@ -272,6 +341,7 @@ def run_e1_acquisition(
                             signal_frequency_hz=signal_frequency_hz,
                             requested_power_dbm=requested_power_dbm,
                             fir_mode=fir_mode,
+                            run_kind="physical_power_tier",
                         )
                         progress = _upsert_progress_row(
                             progress,
@@ -305,13 +375,175 @@ def run_e1_acquisition(
     return progress.copy()
 
 
+def run_e2_acquisition(
+    config: E2AcquisitionConfig = E2AcquisitionConfig(),
+    *,
+    siggen: N9310AUSBTMC | None = None,
+    sdr_factory: Callable[..., Any] | None = None,
+) -> pd.DataFrame:
+    """Run E2 bandpass physical acquisition sweep.
+
+    Protocol:
+    - For each sample rate, scan a logspace frequency grid.
+    - Keep SDR in direct mode by default.
+    - Capture one constant source-power run per frequency (``fir_coeffs=None`` by default).
+    """
+
+    _validate_e2_config(config)
+    config.raw_dir.mkdir(parents=True, exist_ok=True)
+    config.t2_manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    config.progress_path.parent.mkdir(parents=True, exist_ok=True)
+
+    progress = _read_progress(config.progress_path)
+    controller = siggen or N9310AUSBTMC(device_path=config.siggen_device_path, retry=config.siggen_retry)
+
+    controller.rf_on()
+    try:
+        for sample_rate_hz in config.sample_rates_hz:
+            frequency_grid = e2_frequency_grid_hz(
+                sample_rate_hz,
+                n_points=config.n_frequency_points,
+                min_frequency_hz=config.log_min_frequency_hz,
+                max_nyquist_multiple=config.log_max_nyquist_multiple,
+            )
+            for frequency_index, signal_frequency_hz in enumerate(frequency_grid):
+                combo_key = _combo_key_for_experiment(
+                    experiment_tag="e2",
+                    sample_rate_hz=sample_rate_hz,
+                    signal_frequency_hz=signal_frequency_hz,
+                    fir_mode=config.fir_mode,
+                    frequency_index=frequency_index,
+                )
+                run_id = f"{combo_key}__p{_power_tag_dbm(config.source_power_dbm)}"
+                npz_path = config.raw_dir / f"{run_id}.npz"
+                if _is_run_completed(progress, run_id):
+                    continue
+
+                timestamp_utc = _utc_now()
+                try:
+                    controller.set_freq_mhz(signal_frequency_hz / 1e6)
+                    measured_frequency_hz = float(signal_frequency_hz)
+                except Exception as error:
+                    progress = _upsert_progress_row(
+                        progress,
+                        {
+                            "timestamp_utc": timestamp_utc,
+                            "run_id": run_id,
+                            "combo_key": combo_key,
+                            "experiment": config.experiment_id,
+                            "sample_rate_hz": float(sample_rate_hz),
+                            "frequency_hz": float(signal_frequency_hz),
+                            "fir_mode": config.fir_mode,
+                            "power_dbm": float(config.source_power_dbm),
+                            "final_status": "error_io",
+                            "message": f"siggen_frequency_error:{error}",
+                            "npz_path": str(npz_path),
+                        },
+                    )
+                    _write_progress(config.progress_path, progress)
+                    continue
+
+                loaded = _load_measurement_from_npz(npz_path) if npz_path.exists() else None
+                if loaded is not None:
+                    final_status = _measurement_status(loaded)
+                    message = "loaded_existing_npz"
+                    measurement = loaded
+                else:
+                    measurement = _capture_measurement(
+                        config=config,
+                        controller=controller,
+                        sdr_factory=sdr_factory,
+                        sample_rate_hz=sample_rate_hz,
+                        fir_coeffs=config.fir_coeffs,
+                        requested_power_dbm=config.source_power_dbm,
+                    )
+                    if measurement is None:
+                        progress = _upsert_progress_row(
+                            progress,
+                            {
+                                "timestamp_utc": _utc_now(),
+                                "run_id": run_id,
+                                "combo_key": combo_key,
+                                "experiment": config.experiment_id,
+                                "sample_rate_hz": float(sample_rate_hz),
+                                "frequency_hz": float(signal_frequency_hz),
+                                "fir_mode": config.fir_mode,
+                                "power_dbm": float(config.source_power_dbm),
+                                "final_status": "error_io",
+                                "message": "capture_failed",
+                                "npz_path": str(npz_path),
+                            },
+                        )
+                        _write_progress(config.progress_path, progress)
+                        continue
+                    final_status = _measurement_status(measurement)
+                    message = (
+                        "capture_complete"
+                        if final_status == "captured"
+                        else "capture_complete_guard_fail"
+                    )
+                    _save_measurement_npz(
+                        run_id=run_id,
+                        npz_path=npz_path,
+                        run_kind="bandpass_sweep_capture",
+                        config=config,
+                        sample_rate_hz=sample_rate_hz,
+                        signal_frequency_hz=signal_frequency_hz,
+                        measured_frequency_hz=measured_frequency_hz,
+                        fir_mode=config.fir_mode,
+                        fir_coeffs=config.fir_coeffs,
+                        measurement=measurement,
+                        status=final_status,
+                    )
+
+                _append_t2_manifest_row(
+                    config=config,
+                    run_id=run_id,
+                    sample_rate_hz=sample_rate_hz,
+                    signal_frequency_hz=signal_frequency_hz,
+                    requested_power_dbm=config.source_power_dbm,
+                    fir_mode=config.fir_mode,
+                    run_kind="physical_bandpass",
+                )
+                progress = _upsert_progress_row(
+                    progress,
+                    {
+                        "timestamp_utc": _utc_now(),
+                        "run_id": run_id,
+                        "combo_key": combo_key,
+                        "experiment": config.experiment_id,
+                        "sample_rate_hz": float(sample_rate_hz),
+                        "frequency_hz": float(signal_frequency_hz),
+                        "fir_mode": config.fir_mode,
+                        "power_dbm": float(config.source_power_dbm),
+                        "final_status": final_status,
+                        "message": message,
+                        "npz_path": str(npz_path),
+                        "adc_rms": measurement.capture.summary.mean_block_rms,
+                        "adc_max": measurement.capture.summary.adc_max,
+                        "adc_min": measurement.capture.summary.adc_min,
+                        "is_clipped": measurement.capture.summary.is_clipped,
+                        "guard_passed": measurement.capture.summary.passes_guard,
+                        "requested_sample_rate_hz": measurement.capture.requested_sample_rate_hz,
+                        "actual_sample_rate_hz": measurement.capture.actual_sample_rate_hz,
+                    },
+                )
+                _write_progress(config.progress_path, progress)
+    finally:
+        try:
+            controller.rf_off()
+        except Exception:
+            pass
+    return progress.copy()
+
+
 def _measurement_status(measurement: CaptureMeasurement) -> str:
     return "captured" if measurement.capture.summary.passes_guard else "captured_guard_fail"
 
 
 def _capture_measurement(
     *,
-    config: E1AcquisitionConfig,
+    config: AcquisitionConfig,
     controller: N9310AUSBTMC,
     sdr_factory: Callable[..., Any] | None,
     sample_rate_hz: float,
@@ -372,7 +604,7 @@ def _save_measurement_npz(
     run_id: str,
     npz_path: Path,
     run_kind: str,
-    config: E1AcquisitionConfig,
+    config: AcquisitionConfig,
     sample_rate_hz: float,
     signal_frequency_hz: float,
     measured_frequency_hz: float,
@@ -484,12 +716,13 @@ def _load_measurement_from_npz(npz_path: Path) -> CaptureMeasurement | None:
 
 def _append_t2_manifest_row(
     *,
-    config: E1AcquisitionConfig,
+    config: AcquisitionConfig,
     run_id: str,
     sample_rate_hz: float,
     signal_frequency_hz: float,
     requested_power_dbm: float,
     fir_mode: str,
+    run_kind: str,
 ) -> None:
     if config.t2_manifest_path.exists():
         existing = read_manifest_csv(config.t2_manifest_path, table_id="T2")
@@ -506,10 +739,26 @@ def _append_t2_manifest_row(
         "mixer_config": f"{config.mixer_config_prefix}:{fir_mode}",
         "cable_config": config.cable_config,
         "n_samples": int(config.nsamples),
-        "run_kind": "physical_power_tier",
+        "run_kind": run_kind,
         "n_blocks_saved": int(config.nblocks - config.stale_blocks),
     }
     append_manifest_rows(config.t2_manifest_path, [row], table_id="T2", allow_extra=True)
+
+
+def _combo_key_for_experiment(
+    *,
+    experiment_tag: str,
+    sample_rate_hz: float,
+    signal_frequency_hz: float,
+    fir_mode: str,
+    frequency_index: int,
+) -> str:
+    prefix = str(experiment_tag).strip().lower()
+    if not prefix:
+        raise ValueError("experiment_tag cannot be empty.")
+    sr_tag = int(round(sample_rate_hz))
+    freq_tag = int(round(signal_frequency_hz))
+    return f"{prefix}_sr{sr_tag}_f{freq_tag}_idx{frequency_index:02d}_fir_{fir_mode}"
 
 
 def _combo_key(
@@ -519,9 +768,13 @@ def _combo_key(
     fir_mode: str,
     frequency_index: int,
 ) -> str:
-    sr_tag = int(round(sample_rate_hz))
-    freq_tag = int(round(signal_frequency_hz))
-    return f"e1_sr{sr_tag}_f{freq_tag}_idx{frequency_index:02d}_fir_{fir_mode}"
+    return _combo_key_for_experiment(
+        experiment_tag="e1",
+        sample_rate_hz=sample_rate_hz,
+        signal_frequency_hz=signal_frequency_hz,
+        fir_mode=fir_mode,
+        frequency_index=frequency_index,
+    )
 
 
 def _power_tag_dbm(power_dbm: float) -> str:
@@ -573,7 +826,7 @@ def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _validate_config(config: E1AcquisitionConfig) -> None:
+def _validate_e1_config(config: E1AcquisitionConfig) -> None:
     if len(config.sample_rates_hz) == 0:
         raise ValueError("sample_rates_hz cannot be empty.")
     if any(rate <= 0.0 for rate in config.sample_rates_hz):
@@ -594,13 +847,49 @@ def _validate_config(config: E1AcquisitionConfig) -> None:
         raise ValueError("power_tiers_alias_dbm cannot be empty.")
 
 
+def _validate_e2_config(config: E2AcquisitionConfig) -> None:
+    if len(config.sample_rates_hz) == 0:
+        raise ValueError("sample_rates_hz cannot be empty.")
+    if any(rate <= 0.0 for rate in config.sample_rates_hz):
+        raise ValueError("sample_rates_hz must all be positive.")
+    if config.n_frequency_points < 2:
+        raise ValueError("n_frequency_points must be >= 2.")
+    if config.log_min_frequency_hz <= 0.0:
+        raise ValueError("log_min_frequency_hz must be positive.")
+    if config.log_max_nyquist_multiple <= 0.0:
+        raise ValueError("log_max_nyquist_multiple must be positive.")
+    if config.nsamples <= 0:
+        raise ValueError("nsamples must be positive.")
+    if config.nblocks <= 0:
+        raise ValueError("nblocks must be positive.")
+    if config.nblocks <= config.stale_blocks:
+        raise ValueError("nblocks must be greater than stale_blocks.")
+    if config.guard_max_attempts < 1:
+        raise ValueError("guard_max_attempts must be >= 1.")
+    if not str(config.fir_mode).strip():
+        raise ValueError("fir_mode cannot be empty.")
+    for rate in config.sample_rates_hz:
+        e2_frequency_grid_hz(
+            float(rate),
+            n_points=config.n_frequency_points,
+            min_frequency_hz=config.log_min_frequency_hz,
+            max_nyquist_multiple=config.log_max_nyquist_multiple,
+        )
+
+
 __all__ = [
     "DEFAULT_E1_PROGRESS_PATH",
     "DEFAULT_E1_RAW_DIR",
     "DEFAULT_E1_T2_MANIFEST_PATH",
+    "DEFAULT_E2_PROGRESS_PATH",
+    "DEFAULT_E2_RAW_DIR",
+    "DEFAULT_E2_T2_MANIFEST_PATH",
     "E1AcquisitionConfig",
+    "E2AcquisitionConfig",
     "e1_fir_modes",
     "e1_frequency_grid_hz",
     "e1_power_tiers_dbm",
+    "e2_frequency_grid_hz",
     "run_e1_acquisition",
+    "run_e2_acquisition",
 ]
