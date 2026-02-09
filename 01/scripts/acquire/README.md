@@ -49,7 +49,8 @@ Shared behavior:
 
 Parameter patterns:
 - E3: `Vrms`, SG1 required; SG2 required in `two_tone` mode.
-- E4: `Vrms`, bins (`N < 16384`), SG1 required; SG2 required in `resolution` mode.
+- E4: sweep runner by default (`50` runs) with mixed powers-of-two/non-powers-of-two bins (`N < 16384`);
+  SG2 is the manual reference input and SG1 is auto-matched to SG2.
 - E5: `Vrms` and noise-source mode; no signal generator required.
-- E6: `Vrms`, SG1 (LO), SG2 (RF) required.
-- E7: `Vrms`, SG1 required; SG2 required for external SSB/reverted DSB modes.
+- E6: `Vrms`, SG2 manual reference required; SG1 (LO) auto-matches SG2.
+- E7: `Vrms`, SG2 manual reference required; SG1 auto-matches SG2 (SG2 used as RF in external modes).

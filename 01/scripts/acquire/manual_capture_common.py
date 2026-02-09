@@ -403,12 +403,19 @@ def add_common_capture_arguments(
 def add_signal_generator_arguments(
     parser: argparse.ArgumentParser,
     *,
+    include_sg1: bool = True,
     include_sg2: bool = True,
 ) -> None:
     """Add SG1/SG2 CLI arguments (optional, validated later)."""
 
-    parser.add_argument("--sg1-frequency-hz", type=float, default=None, help="Signal generator 1 frequency in Hz.")
-    parser.add_argument("--sg1-power-dbm", type=float, default=None, help="Signal generator 1 power in dBm.")
+    if include_sg1:
+        parser.add_argument(
+            "--sg1-frequency-hz",
+            type=float,
+            default=None,
+            help="Signal generator 1 frequency in Hz.",
+        )
+        parser.add_argument("--sg1-power-dbm", type=float, default=None, help="Signal generator 1 power in dBm.")
     if include_sg2:
         parser.add_argument(
             "--sg2-frequency-hz",
@@ -444,4 +451,14 @@ def resolve_manual_tone(
         label=label,
         frequency_hz=frequency,
         power_dbm=power,
+    )
+
+
+def match_tone_to_reference(reference: ToneParams, *, label: str) -> ToneParams:
+    """Return a tone that matches a reference tone's frequency and power."""
+
+    return ToneParams(
+        label=label,
+        frequency_hz=float(reference.frequency_hz),
+        power_dbm=float(reference.power_dbm),
     )

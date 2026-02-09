@@ -10,6 +10,7 @@ from manual_capture_common import (
     add_common_capture_arguments,
     add_signal_generator_arguments,
     default_run_id,
+    match_tone_to_reference,
     resolve_manual_tone,
     resolve_required_choice,
     resolve_required_float,
@@ -29,14 +30,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--delta-f-hz",
         type=float,
         default=None,
-        help="Sideband offset delta-f in Hz (optional metadata; computed from SG frequencies if possible).",
+        help="Sideband offset delta-f in Hz metadata (optional; defaults to SG2-SG1 difference).",
     )
     add_common_capture_arguments(
         parser,
         default_raw_dir="data/raw/e7",
         default_manifest_path="data/manifests/t2_e7_runs.csv",
     )
-    add_signal_generator_arguments(parser, include_sg2=True)
+    add_signal_generator_arguments(parser, include_sg1=False, include_sg2=True)
     return parser
 
 
@@ -63,20 +64,16 @@ def main() -> None:
             prompt="Target Vrms (V)",
             min_value=0.0,
         )
-        sg1 = resolve_manual_tone(
-            label="signal_generator_1",
-            frequency_hz=args.sg1_frequency_hz,
-            power_dbm=args.sg1_power_dbm,
+        sg2 = resolve_manual_tone(
+            label="signal_generator_2",
+            frequency_hz=args.sg2_frequency_hz,
+            power_dbm=args.sg2_power_dbm,
         )
+        sg1 = match_tone_to_reference(sg2, label="signal_generator_1")
         signal_generators = [sg1]
         role_1 = "LO" if mode != "r820t_internal" else "RF"
         role_2 = None
         if mode != "r820t_internal":
-            sg2 = resolve_manual_tone(
-                label="signal_generator_2",
-                frequency_hz=args.sg2_frequency_hz,
-                power_dbm=args.sg2_power_dbm,
-            )
             signal_generators.append(sg2)
             role_2 = "RF"
 
@@ -88,8 +85,8 @@ def main() -> None:
             )
         else:
             delta_f_hz = None
-        if delta_f_hz is not None and delta_f_hz <= 0.0:
-            raise ValueError("delta_f_hz must be positive when provided.")
+        if delta_f_hz is not None and delta_f_hz < 0.0:
+            raise ValueError("delta_f_hz must be >= 0 when provided.")
     except ValueError as error:
         parser.error(str(error))
         return
@@ -122,6 +119,7 @@ def main() -> None:
             "signal_generator_1_role": role_1,
             "signal_generator_2_role": role_2,
             "delta_f_hz": delta_f_hz,
+            "signal_generator_1_matched_to_signal_generator_2": True,
         },
     )
     result = run_one_shot_capture(params)

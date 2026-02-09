@@ -4,15 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1006305a-a351-41ba-bb3c-24ef1656b7ec" name="Changes" comment="[LAB01] Add all other experiment code">
+    <list default="true" id="1006305a-a351-41ba-bb3c-24ef1656b7ec" name="Changes" comment="[LAB01] Remove auto signal generator polling">
+      <change afterPath="$PROJECT_DIR$/01/data/interim/e3/qc_catalog.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/interim/e3/run_catalog.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/interim/e3/spectrum_profile.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/processed/e3/tables/T2_e3_runs.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e3.tar.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/report/figures/F5_complex_voltage_components_physical.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/report/figures/F6_voltage_vs_power_physical.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/scripts/analyze/run_e3_pipeline.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/e3.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/tests/unit/test_pipeline_e3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/01.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/01/01.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/01/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/AGENTS.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/01/scripts/acquire/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/01/scripts/acquire/manual_capture_common.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/manual_capture_common.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e3_acquire.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e3_acquire.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e4_acquire.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e4_acquire.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e5_acquire.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e5_acquire.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e6_acquire.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e6_acquire.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e7_acquire.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e7_acquire.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/analyze/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/analyze/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +88,7 @@
     <option name="endsOfQuotaMs" value="1772784029193" />
   </component>
   <component name="RecapUselessUpdatesCounter">
-    <option name="suspendCountdown" value="9" />
+    <option name="suspendCountdown" value="6" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -99,7 +110,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770601450934</updated>
-      <workItem from="1770601451980" duration="8434000" />
+      <workItem from="1770601451980" duration="11399000" />
     </task>
     <task id="LOCAL-00001" summary="[LAB01] Initial clone from working ugradio branch">
       <option name="closed" value="true" />
@@ -165,7 +176,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770613878792</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="[LAB01] Remove auto signal generator polling">
+      <option name="closed" value="true" />
+      <created>1770615128739</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1770615128739</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -179,6 +198,7 @@
     <MESSAGE value="[LAB01] Add experiment 2" />
     <MESSAGE value="[LAB01] Reduce experiment 2 power" />
     <MESSAGE value="[LAB01] Add all other experiment code" />
-    <option name="LAST_COMMIT_MESSAGE" value="[LAB01] Add all other experiment code" />
+    <MESSAGE value="[LAB01] Remove auto signal generator polling" />
+    <option name="LAST_COMMIT_MESSAGE" value="[LAB01] Remove auto signal generator polling" />
   </component>
 </project>

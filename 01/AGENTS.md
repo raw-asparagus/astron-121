@@ -189,6 +189,24 @@ Physical acquisition infrastructure for E2 is now implemented:
     (`PIPELINE_RUNNER`) that ingests `data/raw/e2.tar.gz`, writes E2
     interim/processed artifacts, and renders the physical F4 output inline.
   - Reproducibility appendix now includes the E2 physical pipeline command.
+- E3 post-acquisition data pipeline is implemented:
+  - Reusable module: `src/ugradio_lab1/pipeline/e3.py`
+  - CLI runner: `scripts/analyze/run_e3_pipeline.py`
+  - Pipeline can ingest E3 raw data directly from `data/raw/e3.tar.gz` (or a raw NPZ directory).
+  - Generated artifacts:
+    - `data/interim/e3/run_catalog.csv`
+    - `data/interim/e3/qc_catalog.csv`
+    - `data/interim/e3/spectrum_profile.csv`
+    - `data/processed/e3/tables/T2_e3_runs.csv`
+    - `report/figures/F5_complex_voltage_components_physical.png`
+    - `report/figures/F6_voltage_vs_power_physical.png`
+- Pipeline unit tests added:
+  - `tests/unit/test_pipeline_e3.py`
+- Notebook integration updates:
+  - `labs/01/01.ipynb` now includes an E3 physical pipeline integration block
+    (`PIPELINE_RUNNER`) that ingests `data/raw/e3.tar.gz`, writes E3
+    interim/processed artifacts, and renders physical F5/F6 outputs inline.
+  - Reproducibility appendix now includes the E3 physical pipeline command.
 
 Physical acquisition scripts for E3-E7 are now implemented:
 - New one-shot acquisition scripts:
@@ -302,15 +320,16 @@ These decisions were requested explicitly by the user:
   - verbose metadata written in every NPZ;
   - completed run IDs are skipped on resume (duplicate-safe behavior).
 
-12. E3-E7 physical acquisition scripts are one-shot (non-sweep) CLIs.
+12. E3-E7 physical acquisition scripts use manual non-SDR parameter entry.
 - Scripts must validate CLI arguments and prompt for missing required values.
 - Required run-level parameters include `Vrms` and SG settings where applicable.
 - SG usage by experiment:
   - E3: SG1 required, SG2 optional/required by mode.
-  - E4: SG1 required, SG2 required in resolution mode.
+  - E4: default sweep runner (`50` runs) over mixed power-of-two and non-power-of-two
+    bin counts (`N < 16384`); SG2 is manual reference and SG1 is matched to SG2.
   - E5: no SG required.
-  - E6: SG1 + SG2 required.
-  - E7: SG1 required, SG2 required for external modes.
+  - E6: SG2 manual reference required; SG1 is matched to SG2.
+  - E7: SG2 manual reference required; SG1 is matched to SG2.
 
 13. E1 post-processing entrypoint and artifact contract is established.
 - Raw starting point defaults to `data/raw/e1.tar.gz` (direct acquisition output tarball).
@@ -332,6 +351,17 @@ These decisions were requested explicitly by the user:
   - `data/processed/e2/tables/T2_e2_runs.csv`
   - `data/processed/e2/tables/T4_e2_bandpass_summary.csv`
   - `report/figures/F4_bandpass_curves_physical.png`.
+
+15. E3 post-processing entrypoint and artifact contract is established.
+- Raw starting point defaults to `data/raw/e3.tar.gz` (direct acquisition output tarball).
+- The reproducible E3 processing runner is `scripts/analyze/run_e3_pipeline.py`.
+- Required pipeline outputs for notebook/report integration:
+  - `data/interim/e3/run_catalog.csv`
+  - `data/interim/e3/qc_catalog.csv`
+  - `data/interim/e3/spectrum_profile.csv`
+  - `data/processed/e3/tables/T2_e3_runs.csv`
+  - `report/figures/F5_complex_voltage_components_physical.png`
+  - `report/figures/F6_voltage_vs_power_physical.png`.
 
 ## Plotting Requirements
 Plotting functions should stay Axes-first and composable:

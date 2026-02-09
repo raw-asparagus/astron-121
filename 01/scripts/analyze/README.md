@@ -34,3 +34,20 @@ Example:
 cd labs/01
 /Users/junruiting/GitHub/ugradio/.venv/bin/python3 scripts/analyze/run_e2_pipeline.py
 ```
+
+## E3 Physical Pipeline
+
+`run_e3_pipeline.py` consumes raw E3 NPZ input (default `data/raw/e3.tar.gz`) and writes:
+- `data/interim/e3/run_catalog.csv`
+- `data/interim/e3/qc_catalog.csv`
+- `data/interim/e3/spectrum_profile.csv`
+- `data/processed/e3/tables/T2_e3_runs.csv`
+- `report/figures/F5_complex_voltage_components_physical.png`
+- `report/figures/F6_voltage_vs_power_physical.png`
+
+Example:
+
+```bash
+cd labs/01
+/Users/junruiting/GitHub/ugradio/.venv/bin/python3 scripts/analyze/run_e3_pipeline.py
+```

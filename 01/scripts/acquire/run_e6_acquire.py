@@ -10,6 +10,7 @@ from manual_capture_common import (
     add_common_capture_arguments,
     add_signal_generator_arguments,
     default_run_id,
+    match_tone_to_reference,
     resolve_manual_tone,
     resolve_required_float,
     run_one_shot_capture,
@@ -22,14 +23,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--delta-f-hz",
         type=float,
         default=None,
-        help="Sideband offset delta-f in Hz (optional; computed from SG frequencies if omitted).",
+        help="Sideband offset delta-f in Hz metadata (optional; defaults to SG2-SG1 difference).",
     )
     add_common_capture_arguments(
         parser,
         default_raw_dir="data/raw/e6",
         default_manifest_path="data/manifests/t2_e6_runs.csv",
     )
-    add_signal_generator_arguments(parser, include_sg2=True)
+    add_signal_generator_arguments(parser, include_sg1=False, include_sg2=True)
     return parser
 
 
@@ -50,23 +51,19 @@ def main() -> None:
             prompt="Target Vrms (V)",
             min_value=0.0,
         )
-        lo = resolve_manual_tone(
-            label="signal_generator_1",
-            frequency_hz=args.sg1_frequency_hz,
-            power_dbm=args.sg1_power_dbm,
-        )
         rf = resolve_manual_tone(
             label="signal_generator_2",
             frequency_hz=args.sg2_frequency_hz,
             power_dbm=args.sg2_power_dbm,
         )
+        lo = match_tone_to_reference(rf, label="signal_generator_1")
         delta_f_hz = (
             float(args.delta_f_hz)
             if args.delta_f_hz is not None
             else abs(float(rf.frequency_hz) - float(lo.frequency_hz))
         )
-        if delta_f_hz <= 0.0:
-            raise ValueError("delta_f_hz must be positive.")
+        if delta_f_hz < 0.0:
+            raise ValueError("delta_f_hz must be >= 0.")
     except ValueError as error:
         parser.error(str(error))
         return
@@ -98,6 +95,7 @@ def main() -> None:
             "signal_generator_1_role": "LO",
             "signal_generator_2_role": "RF",
             "delta_f_hz": float(delta_f_hz),
+            "signal_generator_1_matched_to_signal_generator_2": True,
         },
     )
     result = run_one_shot_capture(params)
