@@ -108,9 +108,15 @@ Unit tests currently pass for `labs/01/tests` using the repo virtualenv.
 Physical acquisition infrastructure for E1 is now implemented:
 - Signal-generator wrapper:
   - `control/siggen.py` provides N9310A direct USBTMC control on `/dev/usbtmc0`
-    with query-back verification, 10s timeout, and retry logic.
-  - Query polling now treats USBTMC read timeouts (`Errno 110`) as transient
-    misses within the query timeout budget instead of immediate hard-fail.
+    with a minimal command set and retry/timeout logic.
+  - Public API is intentionally minimal:
+    - `set_freq_mhz`, `get_freq`
+    - `set_ampl_dbm`, `get_ampl`
+    - `rf_on`, `rf_off`, `rf_state`
+  - E1 detector runtime now assumes setpoints sent to the generator are the
+    effective setpoints (no query-back enforcement for startup/freq/power).
+  - Query polling treats USBTMC read timeouts (`Errno 110`) as transient misses
+    within the query timeout budget instead of immediate hard-fail.
 - SDR wrapper:
   - `control/sdr.py` provides direct-sampling capture with stale-buffer handling
     (`nblocks=11`, drop first, keep 10), ADC guard metrics, and capture retries.
@@ -174,6 +180,11 @@ These decisions were requested explicitly by the user:
 
 10. E1 physical acquisition contract is locked for current runs.
 - Signal generator model/control: N9310A via direct USBTMC (`/dev/usbtmc0`).
+- Signal-generator API for physical scripts is minimal and fixed:
+  - `set_freq_mhz`, `get_freq`, `set_ampl_dbm`, `get_ampl`,
+    `rf_on`, `rf_off`, `rf_state`.
+- Detector runtime assumes requested signal-generator frequency/power values
+  are the capture metadata values (no query-back verification requirement).
 - Instrument and SDR call timeout/retry policy: timeout `10s`, max retries `3`.
 - Signal-generator settling delay: `1s` after set commands.
 - SDR E1 capture settings:

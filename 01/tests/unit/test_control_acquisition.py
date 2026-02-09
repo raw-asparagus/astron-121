@@ -10,9 +10,9 @@ from ugradio_lab1.control.sdr import ADCSummary, SDRCaptureResult
 
 
 class _DummySigGen:
-    def set_power_dbm_verified(self, power_dbm: float, *, tolerance_dbm: float = 0.05) -> float:
-        del tolerance_dbm
-        return float(power_dbm)
+    def set_ampl_dbm(self, power_dbm: float) -> None:
+        del power_dbm
+        return None
 
 
 def _measurement(

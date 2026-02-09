@@ -96,7 +96,6 @@ class E1AcquisitionConfig:
     center_frequency_hz: float = 0.0
     cable_config: str = "siggen_to_sdr_direct"
     mixer_config_prefix: str = "direct_sdr"
-    expected_idn_substring: str = "N9310A"
 
 
 @dataclass(frozen=True)
@@ -155,8 +154,7 @@ def run_e1_acquisition(
 
     progress = _read_progress(config.progress_path)
     controller = siggen or N9310AUSBTMC(device_path=config.siggen_device_path, retry=config.siggen_retry)
-    controller.validate_identity(expected_substring=config.expected_idn_substring)
-    controller.set_rf_output_verified(True)
+    controller.rf_on()
 
     try:
         for sample_rate_hz in config.sample_rates_hz:
@@ -174,10 +172,8 @@ def run_e1_acquisition(
 
                     timestamp_utc = _utc_now()
                     try:
-                        measured_frequency_hz = controller.set_frequency_hz_verified(
-                            signal_frequency_hz,
-                            tolerance_hz=1.0,
-                        )
+                        controller.set_freq_mhz(signal_frequency_hz / 1e6)
+                        measured_frequency_hz = float(signal_frequency_hz)
                     except Exception as error:
                         progress = _upsert_progress_row(
                             progress,
@@ -348,7 +344,7 @@ def run_e1_acquisition(
                     _write_progress(config.progress_path, progress)
     finally:
         try:
-            controller.set_rf_output(False)
+            controller.rf_off()
         except Exception:
             pass
     return progress.copy()
@@ -529,7 +525,8 @@ def _capture_measurement(
 ) -> CaptureMeasurement | None:
     del signal_frequency_hz, measured_frequency_hz, fir_mode  # carried in caller metadata
     try:
-        measured_power_dbm = controller.set_power_dbm_verified(requested_power_dbm, tolerance_dbm=0.05)
+        controller.set_ampl_dbm(requested_power_dbm)
+        measured_power_dbm = float(requested_power_dbm)
     except Exception:
         return None
 

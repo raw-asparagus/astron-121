@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1006305a-a351-41ba-bb3c-24ef1656b7ec" name="Changes" comment="[LAB01] Update experiment 1 data acquisition script">
+      <change beforePath="$PROJECT_DIR$/01/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/AGENTS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/acquisition.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/control/acquisition.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/siggen.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/control/siggen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_control_acquisition.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/tests/unit/test_control_acquisition.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_control_siggen.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/tests/unit/test_control_siggen.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="7" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="SET_USER_NAME_GLOBALLY" value="false" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "raw-asparagus"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/raw-asparagus/astron-121.git",
+    "accountId": "f278d0be-76c3-40af-9eeb-037301cbd5fa"
+  }
+}]]></component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="39Pd4mjIdOsDnVXFjtWuv4dfEtb" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "ai.playground.ignore.import.keys.banner.in.settings": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Users/junruiting/GitHub/astron-121",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-PY-253.29346.308" />
+        <option value="bundled-python-sdk-ca5e2b39c7df-6e1f45a539f7-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.29346.308" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1006305a-a351-41ba-bb3c-24ef1656b7ec" name="Changes" comment="" />
+      <created>1770601450934</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1770601450934</updated>
+      <workItem from="1770601451980" duration="1316000" />
+    </task>
+    <task id="LOCAL-00001" summary="[LAB01] Initial clone from working ugradio branch">
+      <option name="closed" value="true" />
+      <created>1770601707841</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1770601707841</updated>
+    </task>
+    <task id="LOCAL-00002" summary="[LAB01] Update experiment 1 data acquisition script">
+      <option name="closed" value="true" />
+      <created>1770602239956</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1770602239956</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="[LAB01] Initial clone from working ugradio branch" />
+    <MESSAGE value="[LAB01] Update experiment 1 data acquisition script" />
+    <option name="LAST_COMMIT_MESSAGE" value="[LAB01] Update experiment 1 data acquisition script" />
+  </component>
+</project>

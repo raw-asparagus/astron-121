@@ -1,4 +1,4 @@
-"""Unit tests for control.siggen query timeout handling."""
+"""Unit tests for control.siggen timeout handling."""
 
 from __future__ import annotations
 
@@ -34,14 +34,14 @@ class _FakeSigGen(N9310AUSBTMC):
         return str(current)
 
 
-def test_query_tolerates_transient_timeouts_until_response() -> None:
+def test_get_freq_tolerates_transient_timeouts_until_response() -> None:
     siggen = _FakeSigGen([TimeoutError(), TimeoutError(), "Agilent,N9310A,123,1.0"], timeout_s=2.0)
-    response = siggen.query("*IDN?")
+    response = siggen.get_freq()
     assert response == "Agilent,N9310A,123,1.0"
-    assert siggen.writes == ["*IDN?"]
+    assert siggen.writes == [":FREQuency:CW?"]
 
 
-def test_query_raises_siggenioerror_if_timeout_budget_exhausted() -> None:
+def test_get_freq_raises_siggenioerror_if_timeout_budget_exhausted() -> None:
     siggen = _FakeSigGen([TimeoutError(), TimeoutError(), TimeoutError()], timeout_s=0.0)
     with pytest.raises(SigGenIOError, match="failed after 1 attempts"):
-        siggen.query("*IDN?")
+        siggen.get_freq()

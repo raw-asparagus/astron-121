@@ -5,12 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 import errno
 from pathlib import Path
-import re
 import time
 from typing import Callable, TypeVar
 
 _T = TypeVar("_T")
-_FLOAT_PATTERN = re.compile(r"[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?")
 
 
 class SigGenIOError(RuntimeError):
@@ -30,11 +28,7 @@ class SigGenRetryPolicy:
 
 @dataclass
 class N9310AUSBTMC:
-    """Minimal N9310A USBTMC interface.
-
-    The class intentionally keeps the command surface small and explicit so
-    acquisition logic can verify every set/query transaction.
-    """
+    """Minimal N9310A USBTMC interface."""
 
     device_path: str | Path = "/dev/usbtmc0"
     retry: SigGenRetryPolicy = field(default_factory=SigGenRetryPolicy)
@@ -42,120 +36,60 @@ class N9310AUSBTMC:
     def __post_init__(self) -> None:
         self.device_path = Path(self.device_path)
 
-    def identify(self) -> str:
-        """Return ``*IDN?`` response."""
+    def set_freq_mhz(self, mhz: float) -> None:
+        """Set CW frequency in MHz."""
 
-        return self.query("*IDN?")
-
-    def validate_identity(self, expected_substring: str = "N9310A") -> str:
-        """Query ``*IDN?`` and verify model substring."""
-
-        response = self.identify()
-        if expected_substring.upper() not in response.upper():
-            raise SigGenIOError(
-                f"Unexpected signal generator identity: {response!r}. "
-                f"Expected to contain {expected_substring!r}."
-            )
-        return response
-
-    def set_frequency_hz(self, frequency_hz: float) -> None:
-        """Set CW frequency in Hz."""
-
-        if frequency_hz <= 0.0:
-            raise ValueError("frequency_hz must be positive.")
-        self.write(f":FREQuency:CW {float(frequency_hz):.9f} Hz")
+        if mhz <= 0.0:
+            raise ValueError("mhz must be positive.")
+        self._with_retries(
+            lambda: self._write_once(f":FREQuency:CW {float(mhz):.9f} MHz"),
+            description=f"write frequency {mhz!r} MHz",
+        )
         time.sleep(self.retry.settle_time_s)
 
-    def get_frequency_hz(self) -> float:
-        """Query CW frequency in Hz."""
+    def get_freq(self) -> str:
+        """Query CW frequency."""
 
-        response = self.query(":FREQuency:CW?")
-        return _parse_first_float(response, name="frequency")
+        return self._query_with_retries(":FREQuency:CW?")
 
-    def set_frequency_hz_verified(
-        self,
-        frequency_hz: float,
-        *,
-        tolerance_hz: float = 1.0,
-    ) -> float:
-        """Set frequency and verify by query-back."""
-
-        self.set_frequency_hz(frequency_hz)
-        measured = self.get_frequency_hz()
-        if abs(measured - float(frequency_hz)) > float(tolerance_hz):
-            raise SigGenIOError(
-                "Frequency query-back mismatch: "
-                f"requested={frequency_hz:.6f} Hz measured={measured:.6f} Hz."
-            )
-        return measured
-
-    def set_power_dbm(self, power_dbm: float) -> None:
+    def set_ampl_dbm(self, power_dbm: float) -> None:
         """Set CW output power in dBm."""
 
-        self.write(f":AMPLitude:CW {float(power_dbm):.3f} dBm")
+        self._with_retries(
+            lambda: self._write_once(f":AMPLitude:CW {float(power_dbm):.3f} dBm"),
+            description=f"write amplitude {power_dbm!r} dBm",
+        )
         time.sleep(self.retry.settle_time_s)
 
-    def get_power_dbm(self) -> float:
-        """Query CW output power in dBm."""
+    def get_ampl(self) -> str:
+        """Query CW output power."""
 
-        response = self.query(":AMPLitude:CW?")
-        return _parse_first_float(response, name="power")
+        return self._query_with_retries(":AMPLitude:CW?")
 
-    def set_power_dbm_verified(
-        self,
-        power_dbm: float,
-        *,
-        tolerance_dbm: float = 0.05,
-    ) -> float:
-        """Set power and verify by query-back."""
-
-        self.set_power_dbm(power_dbm)
-        measured = self.get_power_dbm()
-        if abs(measured - float(power_dbm)) > float(tolerance_dbm):
-            raise SigGenIOError(
-                "Power query-back mismatch: "
-                f"requested={power_dbm:.3f} dBm measured={measured:.3f} dBm."
-            )
-        return measured
-
-    def set_rf_output(self, enabled: bool) -> None:
-        """Enable/disable RF output."""
-
-        self.write(":RFOutput:STATe ON" if enabled else ":RFOutput:STATe OFF")
-        time.sleep(self.retry.settle_time_s)
-
-    def get_rf_output(self) -> bool:
-        """Query RF output state."""
-
-        response = self.query(":RFOutput:STATe?").strip().upper()
-        if response.startswith(("1", "ON")):
-            return True
-        if response.startswith(("0", "OFF")):
-            return False
-        raise SigGenIOError(f"Unexpected RF output response: {response!r}.")
-
-    def set_rf_output_verified(self, enabled: bool) -> bool:
-        """Set RF output and verify by query-back."""
-
-        self.set_rf_output(enabled)
-        measured = self.get_rf_output()
-        if measured != bool(enabled):
-            raise SigGenIOError(
-                f"RF output query-back mismatch: requested={enabled!r} measured={measured!r}."
-            )
-        return measured
-
-    def write(self, command: str) -> None:
-        """Write one command with retries."""
+    def rf_on(self) -> None:
+        """Enable RF output."""
 
         self._with_retries(
-            lambda: self._write_once(command),
-            description=f"write {command!r}",
+            lambda: self._write_once(":RFOutput:STATe ON"),
+            description="write RF output ON",
         )
+        time.sleep(self.retry.settle_time_s)
 
-    def query(self, command: str) -> str:
-        """Write query command and wait for non-empty response."""
+    def rf_off(self) -> None:
+        """Disable RF output."""
 
+        self._with_retries(
+            lambda: self._write_once(":RFOutput:STATe OFF"),
+            description="write RF output OFF",
+        )
+        time.sleep(self.retry.settle_time_s)
+
+    def rf_state(self) -> str:
+        """Query RF output state."""
+
+        return self._query_with_retries(":RFOutput:STATe?")
+
+    def _query_with_retries(self, command: str) -> str:
         def _operation() -> str:
             self._write_once(command)
             deadline = time.monotonic() + self.retry.timeout_s
@@ -196,13 +130,6 @@ class N9310AUSBTMC:
         raise SigGenIOError(
             f"Signal-generator {description} failed after {self.retry.max_retries} attempts."
         ) from last_error
-
-
-def _parse_first_float(response: str, *, name: str) -> float:
-    match = _FLOAT_PATTERN.search(response)
-    if match is None:
-        raise SigGenIOError(f"Unable to parse {name} value from response: {response!r}.")
-    return float(match.group(0))
 
 
 def _is_transient_read_timeout(error: Exception) -> bool:
