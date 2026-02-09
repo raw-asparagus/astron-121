@@ -109,6 +109,8 @@ Physical acquisition infrastructure for E1 is now implemented:
 - Signal-generator wrapper:
   - `control/siggen.py` provides N9310A direct USBTMC control on `/dev/usbtmc0`
     with query-back verification, 10s timeout, and retry logic.
+  - Query polling now treats USBTMC read timeouts (`Errno 110`) as transient
+    misses within the query timeout budget instead of immediate hard-fail.
 - SDR wrapper:
   - `control/sdr.py` provides direct-sampling capture with stale-buffer handling
     (`nblocks=11`, drop first, keep 10), ADC guard metrics, and capture retries.
@@ -125,6 +127,7 @@ Physical acquisition infrastructure for E1 is now implemented:
 - Unit tests added for acquisition/control logic:
   - `tests/unit/test_control_sdr.py`
   - `tests/unit/test_control_acquisition.py`
+  - `tests/unit/test_control_siggen.py`
 
 ## Locked-In API Decisions (Do Not Revert)
 These decisions were requested explicitly by the user:

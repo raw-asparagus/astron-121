@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import errno
 from pathlib import Path
 import re
 import time
@@ -159,7 +160,12 @@ class N9310AUSBTMC:
             self._write_once(command)
             deadline = time.monotonic() + self.retry.timeout_s
             while True:
-                response = self._read_once()
+                try:
+                    response = self._read_once()
+                except Exception as error:
+                    if not _is_transient_read_timeout(error):
+                        raise
+                    response = ""
                 if response:
                     return response
                 if time.monotonic() >= deadline:
@@ -197,6 +203,14 @@ def _parse_first_float(response: str, *, name: str) -> float:
     if match is None:
         raise SigGenIOError(f"Unable to parse {name} value from response: {response!r}.")
     return float(match.group(0))
+
+
+def _is_transient_read_timeout(error: Exception) -> bool:
+    if isinstance(error, TimeoutError):
+        return True
+    if isinstance(error, OSError) and getattr(error, "errno", None) == errno.ETIMEDOUT:
+        return True
+    return False
 
 
 __all__ = [
