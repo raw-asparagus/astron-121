@@ -45,6 +45,7 @@ Shared behavior:
 - Prompt interactively for missing required values (e.g., `Vrms`, SG settings).
 - Capture one run with SDR guard-based recapture attempts.
 - Save NPZ data + metadata and append one T2 manifest row.
+- Signal setup is manual analog for E3-E7 (SG values are metadata inputs only).
 
 Parameter patterns:
 - E3: `Vrms`, SG1 required; SG2 required in `two_tone` mode.

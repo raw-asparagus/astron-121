@@ -13,7 +13,6 @@ from manual_capture_common import (
     resolve_required_float,
     run_one_shot_capture,
 )
-from ugradio_lab1.control.siggen import SigGenRetryPolicy
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -59,12 +58,6 @@ def main() -> None:
         parser.error(str(error))
         return
 
-    retry = SigGenRetryPolicy(
-        timeout_s=float(args.timeout_s),
-        max_retries=int(args.max_retries),
-        retry_sleep_s=float(args.retry_sleep_s),
-        settle_time_s=1.0,
-    )
     run_id = args.run_id or default_run_id("E5")
     params = OneShotCaptureParams(
         experiment_id="E5",
@@ -84,7 +77,6 @@ def main() -> None:
         sdr_max_retries=int(args.max_retries),
         sdr_retry_sleep_s=float(args.retry_sleep_s),
         vrms_target_v=float(vrms),
-        siggen_retry=retry,
         signal_generators=tuple(),
         mixer_config=str(args.mixer_config),
         cable_config=str(args.cable_config),

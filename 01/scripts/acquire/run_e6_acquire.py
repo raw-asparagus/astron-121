@@ -10,11 +10,10 @@ from manual_capture_common import (
     add_common_capture_arguments,
     add_signal_generator_arguments,
     default_run_id,
+    resolve_manual_tone,
     resolve_required_float,
-    resolve_siggen,
     run_one_shot_capture,
 )
-from ugradio_lab1.control.siggen import SigGenRetryPolicy
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -51,19 +50,15 @@ def main() -> None:
             prompt="Target Vrms (V)",
             min_value=0.0,
         )
-        lo = resolve_siggen(
+        lo = resolve_manual_tone(
             label="signal_generator_1",
-            device_path=args.sg1_device_path,
             frequency_hz=args.sg1_frequency_hz,
             power_dbm=args.sg1_power_dbm,
-            default_device_path="/dev/usbtmc0",
         )
-        rf = resolve_siggen(
+        rf = resolve_manual_tone(
             label="signal_generator_2",
-            device_path=args.sg2_device_path,
             frequency_hz=args.sg2_frequency_hz,
             power_dbm=args.sg2_power_dbm,
-            default_device_path="/dev/usbtmc1",
         )
         delta_f_hz = (
             float(args.delta_f_hz)
@@ -76,12 +71,6 @@ def main() -> None:
         parser.error(str(error))
         return
 
-    retry = SigGenRetryPolicy(
-        timeout_s=float(args.timeout_s),
-        max_retries=int(args.max_retries),
-        retry_sleep_s=float(args.retry_sleep_s),
-        settle_time_s=1.0,
-    )
     run_id = args.run_id or default_run_id("E6")
     params = OneShotCaptureParams(
         experiment_id="E6",
@@ -101,7 +90,6 @@ def main() -> None:
         sdr_max_retries=int(args.max_retries),
         sdr_retry_sleep_s=float(args.retry_sleep_s),
         vrms_target_v=float(vrms),
-        siggen_retry=retry,
         signal_generators=(lo, rf),
         mixer_config=str(args.mixer_config),
         cable_config=str(args.cable_config),

@@ -204,6 +204,8 @@ Physical acquisition scripts for E3-E7 are now implemented:
     - one-shot SDR guarded capture,
     - NPZ metadata persistence,
     - T2 manifest append.
+  - E3-E7 contract assumes manual analog SG setup only; SG frequencies/powers
+    are captured as metadata and are not programmed from the RPi.
 
 ## Locked-In API Decisions (Do Not Revert)
 These decisions were requested explicitly by the user:

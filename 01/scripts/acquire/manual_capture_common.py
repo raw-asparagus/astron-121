@@ -20,17 +20,15 @@ if _SRC_ROOT.exists() and str(_SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(_SRC_ROOT))
 
 from ugradio_lab1.control.sdr import ADCSummary, SDRCaptureConfig, SDRCaptureResult, acquire_sdr_capture
-from ugradio_lab1.control.siggen import N9310AUSBTMC, SigGenRetryPolicy
 from ugradio_lab1.dataio.catalog import append_manifest_rows
 from ugradio_lab1.dataio.io_npz import save_npz_dataset
 
 
 @dataclass(frozen=True)
-class SignalGeneratorParams:
-    """One signal-generator channel configuration."""
+class ToneParams:
+    """One manually configured tone description."""
 
     label: str
-    device_path: Path
     frequency_hz: float
     power_dbm: float
 
@@ -56,8 +54,7 @@ class OneShotCaptureParams:
     sdr_max_retries: int
     sdr_retry_sleep_s: float
     vrms_target_v: float | None
-    siggen_retry: SigGenRetryPolicy
-    signal_generators: tuple[SignalGeneratorParams, ...]
+    signal_generators: tuple[ToneParams, ...]
     center_frequency_hz: float = 0.0
     mixer_config: str = "direct_sdr"
     cable_config: str = "siggen_to_sdr_direct"
@@ -137,20 +134,8 @@ def resolve_required_int(
     return parsed
 
 
-def resolve_required_path(
-    value: Path | None,
-    *,
-    prompt: str,
-    default_path: str,
-) -> Path:
-    if value is not None:
-        return Path(value)
-    raw = _prompt_if_interactive(f"{prompt} [{default_path}]").strip()
-    return Path(raw or default_path)
-
-
 def run_one_shot_capture(params: OneShotCaptureParams) -> OneShotCaptureResult:
-    """Configure instruments, capture SDR blocks, and persist NPZ + T2 row."""
+    """Capture SDR blocks and persist NPZ + T2 row."""
 
     _validate_capture_params(params)
     params.raw_dir.mkdir(parents=True, exist_ok=True)
@@ -160,22 +145,7 @@ def run_one_shot_capture(params: OneShotCaptureParams) -> OneShotCaptureResult:
     if npz_path.exists():
         raise FileExistsError(f"Refusing to overwrite existing run file: {npz_path}")
 
-    controllers: list[N9310AUSBTMC] = []
-    try:
-        for setting in params.signal_generators:
-            controller = N9310AUSBTMC(device_path=setting.device_path, retry=params.siggen_retry)
-            controller.set_freq_mhz(setting.frequency_hz / 1e6)
-            controller.set_ampl_dbm(setting.power_dbm)
-            controller.rf_on()
-            controllers.append(controller)
-
-        capture, guard_attempts, rejected_attempts = _capture_with_guard(params)
-    finally:
-        for controller in controllers:
-            try:
-                controller.rf_off()
-            except Exception:
-                pass
+    capture, guard_attempts, rejected_attempts = _capture_with_guard(params)
 
     blocks = np.asarray(capture.blocks, dtype=np.int8)
     block_rms = np.sqrt(np.mean(np.square(blocks.astype(float)), axis=1))
@@ -192,12 +162,12 @@ def run_one_shot_capture(params: OneShotCaptureParams) -> OneShotCaptureResult:
         "signal_generators": [
             {
                 "label": setting.label,
-                "device_path": str(setting.device_path),
                 "frequency_hz": float(setting.frequency_hz),
                 "power_dbm": float(setting.power_dbm),
             }
             for setting in params.signal_generators
         ],
+        "signal_setup": "manual_analog",
         "capture_settings": {
             "device_index": int(params.sdr_device_index),
             "direct": bool(params.sdr_direct),
@@ -437,21 +407,9 @@ def add_signal_generator_arguments(
 ) -> None:
     """Add SG1/SG2 CLI arguments (optional, validated later)."""
 
-    parser.add_argument(
-        "--sg1-device-path",
-        type=Path,
-        default=None,
-        help="Signal generator 1 USBTMC path (prompt/default /dev/usbtmc0 if omitted).",
-    )
     parser.add_argument("--sg1-frequency-hz", type=float, default=None, help="Signal generator 1 frequency in Hz.")
     parser.add_argument("--sg1-power-dbm", type=float, default=None, help="Signal generator 1 power in dBm.")
     if include_sg2:
-        parser.add_argument(
-            "--sg2-device-path",
-            type=Path,
-            default=None,
-            help="Signal generator 2 USBTMC path (prompt/default /dev/usbtmc1 if omitted).",
-        )
         parser.add_argument(
             "--sg2-frequency-hz",
             type=float,
@@ -461,21 +419,14 @@ def add_signal_generator_arguments(
         parser.add_argument("--sg2-power-dbm", type=float, default=None, help="Signal generator 2 power in dBm.")
 
 
-def resolve_siggen(
+def resolve_manual_tone(
     *,
     label: str,
-    device_path: Path | None,
     frequency_hz: float | None,
     power_dbm: float | None,
-    default_device_path: str,
-) -> SignalGeneratorParams:
-    """Resolve one SG config from CLI value or interactive prompt."""
+) -> ToneParams:
+    """Resolve one manual tone config from CLI value or interactive prompt."""
 
-    path = resolve_required_path(
-        device_path,
-        prompt=f"{label} device path",
-        default_path=default_device_path,
-    )
     frequency = resolve_required_float(
         frequency_hz,
         name=f"{label} frequency_hz",
@@ -489,9 +440,8 @@ def resolve_siggen(
         min_value=-130.0,
         max_value=25.0,
     )
-    return SignalGeneratorParams(
+    return ToneParams(
         label=label,
-        device_path=path,
         frequency_hz=frequency,
         power_dbm=power,
     )
