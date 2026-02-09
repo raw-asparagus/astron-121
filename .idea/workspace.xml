@@ -4,15 +4,38 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1006305a-a351-41ba-bb3c-24ef1656b7ec" name="Changes" comment="[LAB01] Refine experiment 1 data collection parameters">
-      <change afterPath="$PROJECT_DIR$/01/data/raw/e1.tar.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e2_acquire.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/__init__.py" afterDir="false" />
+    <list default="true" id="1006305a-a351-41ba-bb3c-24ef1656b7ec" name="Changes" comment="[LAB01] Reduce experiment 2 power">
+      <change afterPath="$PROJECT_DIR$/01/data/interim/e1/qc_catalog.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/interim/e1/run_catalog.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/interim/e2/bandpass_curves.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/interim/e2/qc_catalog.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/interim/e2/run_catalog.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/processed/e1/tables/T2_e1_runs.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/processed/e1/tables/T3_e1_alias_residuals.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/processed/e2/tables/T2_e2_runs.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/processed/e2/tables/T4_e2_bandpass_summary.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/data/raw/e2.tar.gz" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/report/figures/F2_alias_map_physical.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/report/figures/F4_bandpass_curves_physical.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/scripts/acquire/manual_capture_common.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e3_acquire.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e4_acquire.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e5_acquire.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e6_acquire.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e7_acquire.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/scripts/analyze/run_e1_pipeline.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/scripts/analyze/run_e2_pipeline.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/e1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/e2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/tests/unit/test_pipeline_e1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/01/tests/unit/test_pipeline_e2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/01.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/01/01.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/01/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/AGENTS.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/01/scripts/acquire/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/control/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/acquisition.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/control/acquisition.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_control_acquisition.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/tests/unit/test_control_acquisition.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e2_acquire.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e2_acquire.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/analyze/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/analyze/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +96,12 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecapSpentCounter">
+    <option name="endsOfQuotaMs" value="1772784029193" />
+  </component>
+  <component name="RecapUselessUpdatesCounter">
+    <option name="suspendCountdown" value="9" />
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -93,7 +122,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770601450934</updated>
-      <workItem from="1770601451980" duration="5056000" />
+      <workItem from="1770601451980" duration="7339000" />
     </task>
     <task id="LOCAL-00001" summary="[LAB01] Initial clone from working ugradio branch">
       <option name="closed" value="true" />
@@ -127,7 +156,31 @@
       <option name="project" value="LOCAL" />
       <updated>1770606785668</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="[LAB01] Add experiment 2">
+      <option name="closed" value="true" />
+      <created>1770609742268</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1770609742268</updated>
+    </task>
+    <task id="LOCAL-00006" summary="[LAB01] Reduce experiment 2 power">
+      <option name="closed" value="true" />
+      <created>1770610043144</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1770610043144</updated>
+    </task>
+    <task id="LOCAL-00007" summary="[LAB01] Reduce experiment 2 power">
+      <option name="closed" value="true" />
+      <created>1770610133771</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1770610133771</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -138,6 +191,8 @@
     <MESSAGE value="[LAB01] Update experiment 1 data acquisition script" />
     <MESSAGE value="[LAB01] Simplify experiment 1 data acquisition script to remove handshake responses for USBTMC protocol" />
     <MESSAGE value="[LAB01] Refine experiment 1 data collection parameters" />
-    <option name="LAST_COMMIT_MESSAGE" value="[LAB01] Refine experiment 1 data collection parameters" />
+    <MESSAGE value="[LAB01] Add experiment 2" />
+    <MESSAGE value="[LAB01] Reduce experiment 2 power" />
+    <option name="LAST_COMMIT_MESSAGE" value="[LAB01] Reduce experiment 2 power" />
   </component>
 </project>

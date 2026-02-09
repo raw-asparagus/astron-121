@@ -4,6 +4,7 @@ __all__ = [
     "sim",
     "control",
     "dataio",
+    "pipeline",
     "analysis",
     "plotting",
     "utils",

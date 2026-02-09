@@ -51,7 +51,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--source-power-dbm",
         type=float,
-        default=-30.0,
+        default=-10.0,
         help="Constant signal-generator power in dBm for the sweep (default: -10).",
     )
     parser.add_argument(

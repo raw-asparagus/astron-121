@@ -89,6 +89,9 @@ Notebook integration updates:
 - `labs/01/01.ipynb` now includes SIM runner code blocks for E1-E7 and
   simulation caption markdown blocks for all generated simulation figures
   (F2 through F18).
+- `labs/01/01.ipynb` now includes an E1 physical pipeline integration block
+  (`PIPELINE_RUNNER`) that can ingest `data/raw/e1.tar.gz`, rebuild/write
+  E1 interim/processed artifacts, and display the physical F2 output inline.
 - E1 writeup sections in `labs/01/01.ipynb` are synchronized with the current
   physical acquisition contract:
   - `nblocks=6`, drop first stale block, save/use `5` blocks.
@@ -141,6 +144,18 @@ Physical acquisition infrastructure for E1 is now implemented:
   - `tests/unit/test_control_sdr.py`
   - `tests/unit/test_control_acquisition.py`
   - `tests/unit/test_control_siggen.py`
+- E1 post-acquisition data pipeline is implemented:
+  - Reusable module: `src/ugradio_lab1/pipeline/e1.py`
+  - CLI runner: `scripts/analyze/run_e1_pipeline.py`
+  - Pipeline can ingest E1 raw data directly from `data/raw/e1.tar.gz` (or a raw NPZ directory).
+  - Generated artifacts:
+    - `data/interim/e1/run_catalog.csv`
+    - `data/interim/e1/qc_catalog.csv`
+    - `data/processed/e1/tables/T2_e1_runs.csv`
+    - `data/processed/e1/tables/T3_e1_alias_residuals.csv`
+    - `report/figures/F2_alias_map_physical.png`
+- Pipeline unit tests added:
+  - `tests/unit/test_pipeline_e1.py`
 
 Physical acquisition infrastructure for E2 is now implemented:
 - Acquisition orchestrator:
@@ -156,6 +171,39 @@ Physical acquisition infrastructure for E2 is now implemented:
   - `scripts/acquire/run_e2_acquire.py` runs physical E2 acquisition from CLI.
 - Control package exports now include E2 acquisition symbols in
   `control/__init__.py`.
+- E2 post-acquisition data pipeline is implemented:
+  - Reusable module: `src/ugradio_lab1/pipeline/e2.py`
+  - CLI runner: `scripts/analyze/run_e2_pipeline.py`
+  - Pipeline can ingest E2 raw data directly from `data/raw/e2.tar.gz` (or a raw NPZ directory).
+  - Generated artifacts:
+    - `data/interim/e2/run_catalog.csv`
+    - `data/interim/e2/qc_catalog.csv`
+    - `data/interim/e2/bandpass_curves.csv`
+    - `data/processed/e2/tables/T2_e2_runs.csv`
+    - `data/processed/e2/tables/T4_e2_bandpass_summary.csv`
+    - `report/figures/F4_bandpass_curves_physical.png`
+- Pipeline unit tests added:
+  - `tests/unit/test_pipeline_e2.py`
+- Notebook integration updates:
+  - `labs/01/01.ipynb` now includes an E2 physical pipeline integration block
+    (`PIPELINE_RUNNER`) that ingests `data/raw/e2.tar.gz`, writes E2
+    interim/processed artifacts, and renders the physical F4 output inline.
+  - Reproducibility appendix now includes the E2 physical pipeline command.
+
+Physical acquisition scripts for E3-E7 are now implemented:
+- New one-shot acquisition scripts:
+  - `scripts/acquire/run_e3_acquire.py`
+  - `scripts/acquire/run_e4_acquire.py`
+  - `scripts/acquire/run_e5_acquire.py`
+  - `scripts/acquire/run_e6_acquire.py`
+  - `scripts/acquire/run_e7_acquire.py`
+- Shared helper module:
+  - `scripts/acquire/manual_capture_common.py` centralizes:
+    - CLI + interactive prompt resolution for required parameters,
+    - SG1/SG2 validation,
+    - one-shot SDR guarded capture,
+    - NPZ metadata persistence,
+    - T2 manifest append.
 
 ## Locked-In API Decisions (Do Not Revert)
 These decisions were requested explicitly by the user:
@@ -251,6 +299,37 @@ These decisions were requested explicitly by the user:
   - deterministic run IDs/paths per sweep point;
   - verbose metadata written in every NPZ;
   - completed run IDs are skipped on resume (duplicate-safe behavior).
+
+12. E3-E7 physical acquisition scripts are one-shot (non-sweep) CLIs.
+- Scripts must validate CLI arguments and prompt for missing required values.
+- Required run-level parameters include `Vrms` and SG settings where applicable.
+- SG usage by experiment:
+  - E3: SG1 required, SG2 optional/required by mode.
+  - E4: SG1 required, SG2 required in resolution mode.
+  - E5: no SG required.
+  - E6: SG1 + SG2 required.
+  - E7: SG1 required, SG2 required for external modes.
+
+13. E1 post-processing entrypoint and artifact contract is established.
+- Raw starting point defaults to `data/raw/e1.tar.gz` (direct acquisition output tarball).
+- The reproducible E1 processing runner is `scripts/analyze/run_e1_pipeline.py`.
+- Required pipeline outputs for notebook/report integration:
+  - `data/interim/e1/run_catalog.csv`
+  - `data/interim/e1/qc_catalog.csv`
+  - `data/processed/e1/tables/T2_e1_runs.csv`
+  - `data/processed/e1/tables/T3_e1_alias_residuals.csv`
+  - `report/figures/F2_alias_map_physical.png`.
+
+14. E2 post-processing entrypoint and artifact contract is established.
+- Raw starting point defaults to `data/raw/e2.tar.gz` (direct acquisition output tarball).
+- The reproducible E2 processing runner is `scripts/analyze/run_e2_pipeline.py`.
+- Required pipeline outputs for notebook/report integration:
+  - `data/interim/e2/run_catalog.csv`
+  - `data/interim/e2/qc_catalog.csv`
+  - `data/interim/e2/bandpass_curves.csv`
+  - `data/processed/e2/tables/T2_e2_runs.csv`
+  - `data/processed/e2/tables/T4_e2_bandpass_summary.csv`
+  - `report/figures/F4_bandpass_curves_physical.png`.
 
 ## Plotting Requirements
 Plotting functions should stay Axes-first and composable:

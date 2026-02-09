@@ -13,6 +13,22 @@ from ugradio_lab1.pipeline.e1 import (
     build_e1_t3_table,
     write_e1_alias_figure,
 )
+from ugradio_lab1.pipeline.e2 import (
+    DEFAULT_E2_CURVE_TABLE_PATH,
+    DEFAULT_E2_F4_FIGURE_PATH,
+    DEFAULT_E2_QC_CATALOG_PATH,
+    DEFAULT_E2_RAW_SOURCE,
+    DEFAULT_E2_RUN_CATALOG_PATH,
+    DEFAULT_E2_T2_TABLE_PATH,
+    DEFAULT_E2_T4_TABLE_PATH,
+    build_e2_bandpass_curve_table,
+    build_e2_qc_catalog,
+    build_e2_run_catalog,
+    build_e2_t2_table,
+    build_e2_t4_table,
+    select_e2_analysis_runs,
+    write_e2_bandpass_figure,
+)
 
 __all__ = [
     "DEFAULT_E1_F2_FIGURE_PATH",
@@ -26,4 +42,18 @@ __all__ = [
     "build_e1_t2_table",
     "build_e1_t3_table",
     "write_e1_alias_figure",
+    "DEFAULT_E2_CURVE_TABLE_PATH",
+    "DEFAULT_E2_F4_FIGURE_PATH",
+    "DEFAULT_E2_QC_CATALOG_PATH",
+    "DEFAULT_E2_RAW_SOURCE",
+    "DEFAULT_E2_RUN_CATALOG_PATH",
+    "DEFAULT_E2_T2_TABLE_PATH",
+    "DEFAULT_E2_T4_TABLE_PATH",
+    "build_e2_bandpass_curve_table",
+    "build_e2_qc_catalog",
+    "build_e2_run_catalog",
+    "build_e2_t2_table",
+    "build_e2_t4_table",
+    "select_e2_analysis_runs",
+    "write_e2_bandpass_figure",
 ]
