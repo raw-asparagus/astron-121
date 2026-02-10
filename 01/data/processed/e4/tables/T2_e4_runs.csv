@@ -1,0 +1,5 @@
+run_id,experiment,sample_rate_hz,center_frequency_hz,tones_hz,source_power_dbm,mixer_config,cable_config,n_samples,run_kind,status,n_blocks_saved,sample_rate_hz_requested,sample_rate_hz_actual,sample_rate_error_hz,mode,e4_track,qc_analysis_pass,qc_recommended_pass,notes
+e3_20260209T054629Z,E4,3200000.0,291666.65,"[250000.0, 333333.3]",-27.9,,,2048,physical_voltage_power,captured,5,3200000.0,3200000.0,0.0,two_tone,resolution,True,True,
+e3_20260209T054708Z,E4,3200000.0,333333.3,[333333.3],-27.9,,,2048,physical_voltage_power,captured,5,3200000.0,3200000.0,0.0,single_tone,leakage,True,True,
+e3_20260209T054801Z,E4,3200000.0,250000.0,[250000.0],-27.9,,,2048,physical_voltage_power,captured,5,3200000.0,3200000.0,0.0,single_tone,leakage,True,True,
+e3_20260209T054900Z,E4,3200000.0,333333.3,[333333.3],-24.6,,,2048,physical_voltage_power,captured,5,3200000.0,3200000.0,0.0,single_tone,leakage,True,True,

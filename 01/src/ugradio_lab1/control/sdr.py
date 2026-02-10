@@ -1,5 +1,3 @@
-"""SDR control wrappers and acquisition helpers."""
-
 from __future__ import annotations
 
 from contextlib import contextmanager
@@ -81,22 +79,7 @@ def acquire_sdr_capture(
     For E1 this is ``nblocks=6`` and ``stale_blocks=1``, leaving 5 clean blocks.
     """
 
-    if config.sample_rate_hz <= 0.0:
-        raise ValueError("sample_rate_hz must be positive.")
-    if config.center_frequency_hz < 0.0:
-        raise ValueError("center_frequency_hz cannot be negative.")
-    if not config.direct and config.center_frequency_hz <= 0.0:
-        raise ValueError("center_frequency_hz must be positive when direct=False.")
-    if config.nsamples <= 0:
-        raise ValueError("nsamples must be positive.")
-    if config.nblocks <= 0:
-        raise ValueError("nblocks must be positive.")
-    if config.stale_blocks < 0:
-        raise ValueError("stale_blocks cannot be negative.")
-    if config.nblocks <= config.stale_blocks:
-        raise ValueError("nblocks must be larger than stale_blocks.")
-    if config.max_retries < 1:
-        raise ValueError("max_retries must be >= 1.")
+    _validate_capture_config(config)
 
     constructor = _resolve_sdr_factory(sdr_factory)
     last_error: Exception | None = None
@@ -171,6 +154,25 @@ def _capture_once(
         requested_sample_rate_hz=float(config.sample_rate_hz),
         actual_sample_rate_hz=float(actual_sample_rate_hz),
     )
+
+
+def _validate_capture_config(config: SDRCaptureConfig) -> None:
+    if config.sample_rate_hz <= 0.0:
+        raise ValueError("sample_rate_hz must be positive.")
+    if config.center_frequency_hz < 0.0:
+        raise ValueError("center_frequency_hz cannot be negative.")
+    if not config.direct and config.center_frequency_hz <= 0.0:
+        raise ValueError("center_frequency_hz must be positive when direct=False.")
+    if config.nsamples <= 0:
+        raise ValueError("nsamples must be positive.")
+    if config.nblocks <= 0:
+        raise ValueError("nblocks must be positive.")
+    if config.stale_blocks < 0:
+        raise ValueError("stale_blocks cannot be negative.")
+    if config.nblocks <= config.stale_blocks:
+        raise ValueError("nblocks must be larger than stale_blocks.")
+    if config.max_retries < 1:
+        raise ValueError("max_retries must be >= 1.")
 
 
 def _resolve_sdr_factory(sdr_factory: Callable[..., Any] | None) -> Callable[..., Any]:

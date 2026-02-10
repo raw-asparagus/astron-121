@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from ugradio_lab1.analysis.leakage import leakage_metric
+from ugradio_lab1.analysis.experiments import leakage_metric
 from ugradio_lab1.sim.nyquist import (
     estimate_peak_frequency,
     generate_tone,
@@ -46,6 +46,13 @@ def test_simulate_alias_sweep_residual_small_for_bin_centered_tones() -> None:
         noise_std_v=0.0,
         complex_output=True,
     )
+
+    predicted = simulation.table["predicted_alias_hz"].to_numpy(dtype=float)
+    measured = simulation.table["measured_alias_hz"].to_numpy(dtype=float)
+    assert np.all(predicted >= 0.0)
+    assert np.all(predicted <= (fs / 2.0) + 1e-9)
+    assert np.all(measured >= 0.0)
+    assert np.all(measured <= (fs / 2.0) + 1e-9)
 
     residual = simulation.table["residual_hz"].to_numpy(dtype=float)
     assert residual.shape == (2,)

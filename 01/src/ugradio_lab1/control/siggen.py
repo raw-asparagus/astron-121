@@ -1,5 +1,3 @@
-"""Signal-generator control wrappers for N9310A over direct USBTMC."""
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -41,11 +39,10 @@ class N9310AUSBTMC:
 
         if mhz <= 0.0:
             raise ValueError("mhz must be positive.")
-        self._with_retries(
-            lambda: self._write_once(f":FREQuency:CW {float(mhz):.9f} MHz"),
+        self._write_with_settle(
+            f":FREQuency:CW {float(mhz):.9f} MHz",
             description=f"write frequency {mhz!r} MHz",
         )
-        time.sleep(self.retry.settle_time_s)
 
     def get_freq(self) -> str:
         """Query CW frequency."""
@@ -55,11 +52,10 @@ class N9310AUSBTMC:
     def set_ampl_dbm(self, power_dbm: float) -> None:
         """Set CW output power in dBm."""
 
-        self._with_retries(
-            lambda: self._write_once(f":AMPLitude:CW {float(power_dbm):.3f} dBm"),
+        self._write_with_settle(
+            f":AMPLitude:CW {float(power_dbm):.3f} dBm",
             description=f"write amplitude {power_dbm!r} dBm",
         )
-        time.sleep(self.retry.settle_time_s)
 
     def get_ampl(self) -> str:
         """Query CW output power."""
@@ -69,20 +65,12 @@ class N9310AUSBTMC:
     def rf_on(self) -> None:
         """Enable RF output."""
 
-        self._with_retries(
-            lambda: self._write_once(":RFOutput:STATe ON"),
-            description="write RF output ON",
-        )
-        time.sleep(self.retry.settle_time_s)
+        self._write_with_settle(":RFOutput:STATe ON", description="write RF output ON")
 
     def rf_off(self) -> None:
         """Disable RF output."""
 
-        self._with_retries(
-            lambda: self._write_once(":RFOutput:STATe OFF"),
-            description="write RF output OFF",
-        )
-        time.sleep(self.retry.settle_time_s)
+        self._write_with_settle(":RFOutput:STATe OFF", description="write RF output OFF")
 
     def rf_state(self) -> str:
         """Query RF output state."""
@@ -112,6 +100,10 @@ class N9310AUSBTMC:
         with self.device_path.open("w", buffering=1) as device:
             device.write(command.rstrip("\n") + "\n")
             device.flush()
+
+    def _write_with_settle(self, command: str, *, description: str) -> None:
+        self._with_retries(lambda: self._write_once(command), description=description)
+        time.sleep(self.retry.settle_time_s)
 
     def _read_once(self) -> str:
         with self.device_path.open("r") as device:

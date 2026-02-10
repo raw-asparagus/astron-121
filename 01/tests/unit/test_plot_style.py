@@ -6,7 +6,7 @@ import pytest
 
 matplotlib = pytest.importorskip("matplotlib")
 
-from ugradio_lab1.plotting.style import get_lab_rc_params, lab_style_context
+from ugradio_lab1.plotting.axes_plots import get_lab_rc_params, lab_style_context
 
 
 def test_get_lab_rc_params_applies_overrides() -> None:

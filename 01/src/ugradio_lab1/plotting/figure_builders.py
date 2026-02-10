@@ -121,14 +121,14 @@ class TimeDomainComparisonFigureBuilder:
         bad_voltage_v: np.ndarray,
         *,
         clip_limits_v: tuple[float, float] | None = None,
-        sample_slice: SampleSlice = slice(0, 300),
+        sample_slice: SampleSlice = slice(0, 100),
     ) -> tuple[Figure, dict[str, Axes]]:
         """Build figure from a readable time slice (default first 300 samples)."""
 
         time_values, good_values, bad_values = _apply_sample_slice(
             time_s, good_voltage_v, bad_voltage_v, sample_slice
         )
-        figure = plt.figure(figsize=self.figsize)
+        figure = plt.figure(figsize=self.figsize, dpi=300)
         ax = figure.add_subplot(1, 1, 1)
 
         plot_time_series_comparison(
@@ -139,7 +139,7 @@ class TimeDomainComparisonFigureBuilder:
             reference_label="Good run",
             comparison_label="Bad run",
             clip_limits_v=clip_limits_v,
-            title="Time-Domain Diagnostics",
+            title="Signal clipping (Time-Domain)",
         )
         ax.legend(loc="best")
         return figure, {"main": ax}
@@ -230,7 +230,7 @@ class VoltagePowerComparisonFigureBuilder:
 
 @dataclass
 class LeakageComparisonFigureBuilder:
-    """GridSpec builder for F7 bin-centered vs off-bin leakage."""
+    """GridSpec builder for F10 bin-centered vs off-bin leakage (standalone; use LeakageAndResolutionFigureBuilder for combined figure)."""
 
     figsize: tuple[float, float] = (10.0, 5.0)
 
@@ -260,7 +260,7 @@ class LeakageComparisonFigureBuilder:
 
 @dataclass
 class ResolutionFigureBuilder:
-    """GridSpec builder for F8 resolution vs N."""
+    """GridSpec builder for resolution vs N (standalone; use LeakageAndResolutionFigureBuilder for combined F10)."""
 
     figsize: tuple[float, float] = (9.0, 5.5)
 
@@ -286,10 +286,60 @@ class ResolutionFigureBuilder:
 
 
 @dataclass
-class MultiWindowSpectrumFigureBuilder:
-    """GridSpec builder for F9 multi-window spectral views."""
+class LeakageAndResolutionFigureBuilder:
+    """GridSpec builder for F10: combined spectral leakage and resolution side-by-side."""
 
-    figsize: tuple[float, float] = (12.0, 8.0)
+    figsize: tuple[float, float] = (14.0, 5.0)
+
+    def build(
+        self,
+        # Leakage parameters
+        leakage_frequency_hz: np.ndarray,
+        bin_centered_power_v2: np.ndarray,
+        off_bin_power_v2: np.ndarray,
+        # Resolution parameters
+        n_samples: np.ndarray,
+        measured_delta_f_hz: np.ndarray,
+        *,
+        db: bool = True,
+        sample_rate_hz: float | np.ndarray | None = None,
+    ) -> tuple[Figure, dict[str, Axes]]:
+        figure = plt.figure(figsize=self.figsize)
+        grid = figure.add_gridspec(1, 2, wspace=0.25)
+        ax_leakage = figure.add_subplot(grid[0, 0])
+        ax_resolution = figure.add_subplot(grid[0, 1])
+
+        # Left: Spectral leakage comparison
+        plot_power_spectrum_comparison(
+            ax_leakage,
+            leakage_frequency_hz,
+            bin_centered_power_v2,
+            off_bin_power_v2,
+            label_a="Bin-centered",
+            label_b="Off-bin",
+            db=db,
+            title="Spectral Leakage Comparison",
+        )
+        ax_leakage.legend(loc="best")
+
+        # Right: Frequency resolution vs N
+        plot_resolution_vs_n(
+            ax_resolution,
+            n_samples,
+            measured_delta_f_hz,
+            sample_rate_hz=sample_rate_hz,
+            title="Frequency Resolution vs N",
+        )
+        ax_resolution.legend(loc="best")
+
+        return figure, {"leakage": ax_leakage, "resolution": ax_resolution}
+
+
+@dataclass
+class MultiWindowSpectrumFigureBuilder:
+    """GridSpec builder for F11 multi-window spectral views."""
+
+    figsize: tuple[float, float] = (12, 7)
 
     def build(
         self,
@@ -307,7 +357,7 @@ class MultiWindowSpectrumFigureBuilder:
         n_plots = len(labels)
         nrows = int(math.ceil(n_plots / ncols))
 
-        figure = plt.figure(figsize=self.figsize)
+        figure = plt.figure(figsize=self.figsize, dpi=300)
         grid = figure.add_gridspec(nrows, ncols, hspace=0.3, wspace=0.2)
         axes_by_window: dict[str, Axes] = {}
 
@@ -337,7 +387,7 @@ class MultiWindowSpectrumFigureBuilder:
 
 @dataclass
 class NoiseHistogramFigureBuilder:
-    """GridSpec builder for F10 noise histogram + Gaussian fit."""
+    """GridSpec builder for noise histogram + Gaussian fit (standalone; use NoiseHistogramAndRadiometerFigureBuilder for combined F12)."""
 
     figsize: tuple[float, float] = (8.5, 5.0)
 
@@ -356,7 +406,7 @@ class NoiseHistogramFigureBuilder:
 
 @dataclass
 class RadiometerFigureBuilder:
-    """GridSpec builder for F11 radiometer scaling."""
+    """GridSpec builder for radiometer scaling (standalone; use NoiseHistogramAndRadiometerFigureBuilder for combined F12)."""
 
     figsize: tuple[float, float] = (9.0, 5.5)
 
@@ -376,8 +426,52 @@ class RadiometerFigureBuilder:
 
 
 @dataclass
+class NoiseHistogramAndRadiometerFigureBuilder:
+    """GridSpec builder for F13: combined noise histogram and radiometer scaling side-by-side."""
+
+    figsize: tuple[float, float] = (14.0, 5.0)
+
+    def build(
+        self,
+        # Histogram parameters
+        samples: np.ndarray,
+        # Radiometer parameters
+        n_avg: np.ndarray,
+        sigma: np.ndarray,
+        *,
+        bins: int = 60,
+        fit_result: dict[str, float] | None = None,
+    ) -> tuple[Figure, dict[str, Axes]]:
+        figure = plt.figure(figsize=self.figsize)
+        grid = figure.add_gridspec(1, 2, wspace=0.25)
+        ax_histogram = figure.add_subplot(grid[0, 0])
+        ax_radiometer = figure.add_subplot(grid[0, 1])
+
+        # Left: Noise histogram + Gaussian fit
+        plot_histogram_with_gaussian(
+            ax_histogram,
+            samples,
+            bins=bins,
+            title="Noise Histogram + Gaussian Fit",
+        )
+        ax_histogram.legend(loc="best")
+
+        # Right: Radiometer scaling
+        plot_radiometer_fit(
+            ax_radiometer,
+            n_avg,
+            sigma,
+            fit_result=fit_result,
+            title="Radiometer Scaling",
+        )
+        ax_radiometer.legend(loc="best")
+
+        return figure, {"histogram": ax_histogram, "radiometer": ax_radiometer}
+
+
+@dataclass
 class ACFSpectrumConsistencyFigureBuilder:
-    """GridSpec builder for F12 ACF/spectrum consistency checks."""
+    """GridSpec builder for F11 ACF/spectrum consistency checks (used in E4 for single-tone demonstration)."""
 
     figsize: tuple[float, float] = (10.0, 7.0)
 
@@ -400,7 +494,7 @@ class ACFSpectrumConsistencyFigureBuilder:
 
 @dataclass
 class DSBOutputSpectrumFigureBuilder:
-    """GridSpec builder for F13 DSB output spectrum + line markers."""
+    """GridSpec builder for F14 DSB output spectrum + line markers."""
 
     figsize: tuple[float, float] = (10.0, 5.5)
 
@@ -429,7 +523,7 @@ class DSBOutputSpectrumFigureBuilder:
 
 @dataclass
 class FilteredWaveformFigureBuilder:
-    """GridSpec builder for F14 inverse-transformed filtered waveform."""
+    """GridSpec builder for F15 inverse-transformed filtered waveform."""
 
     figsize: tuple[float, float] = (10.0, 4.5)
 
@@ -461,7 +555,7 @@ class FilteredWaveformFigureBuilder:
 
 @dataclass
 class SpurSurveyFigureBuilder:
-    """GridSpec builder for F15 intermodulation spur survey."""
+    """GridSpec builder for F16 harmonic spur survey."""
 
     figsize: tuple[float, float] = (10.0, 5.5)
 
@@ -481,7 +575,7 @@ class SpurSurveyFigureBuilder:
             power_v2,
             expected_lines_hz=expected_lines_hz,
             annotate_top_n=annotate_top_n,
-            title="Intermodulation Spur Survey",
+            title="Harmonic Spur Survey",
         )
         ax.legend(loc="best")
         return figure, {"main": ax}
@@ -489,7 +583,7 @@ class SpurSurveyFigureBuilder:
 
 @dataclass
 class SSBIQBehaviorFigureBuilder:
-    """GridSpec builder for F16 SSB IQ trajectory behavior."""
+    """GridSpec builder for F17 SSB IQ trajectory behavior."""
 
     figsize: tuple[float, float] = (11.0, 5.0)
 
@@ -526,7 +620,7 @@ class SSBIQBehaviorFigureBuilder:
 
 @dataclass
 class RevertedDSBComparisonFigureBuilder:
-    """GridSpec builder for F17 reverted-DSB comparison."""
+    """GridSpec builder for F18 reverted-DSB comparison."""
 
     figsize: tuple[float, float] = (10.0, 5.0)
 
@@ -556,7 +650,7 @@ class RevertedDSBComparisonFigureBuilder:
 
 @dataclass
 class R820TComparisonFigureBuilder:
-    """GridSpec builder for F18 external vs R820T internal comparison."""
+    """GridSpec builder for F19 external vs R820T internal comparison."""
 
     figsize: tuple[float, float] = (10.0, 5.0)
 
@@ -625,8 +719,10 @@ __all__ = [
     "ComplexVoltageComponentsFigureBuilder",
     "DSBOutputSpectrumFigureBuilder",
     "FilteredWaveformFigureBuilder",
+    "LeakageAndResolutionFigureBuilder",
     "LeakageComparisonFigureBuilder",
     "MultiWindowSpectrumFigureBuilder",
+    "NoiseHistogramAndRadiometerFigureBuilder",
     "NoiseHistogramFigureBuilder",
     "R820TComparisonFigureBuilder",
     "RadiometerFigureBuilder",

@@ -1,0 +1,4 @@
+For .npz files in this subdirectory, run-X-Y.npz
+- X denotes RF frequency
+- Y denotes sampling frequency
+LO is set to 1.5 MHz

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from ugradio_lab1.analysis.noise import radiometer_fit
+from ugradio_lab1.analysis.experiments import radiometer_fit
 from ugradio_lab1.sim.noise import (
     bandlimit_noise,
     generate_gaussian_noise,

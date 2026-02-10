@@ -4,36 +4,138 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1006305a-a351-41ba-bb3c-24ef1656b7ec" name="Changes" comment="[LAB01] Automate sweeping for Experiment 4">
-      <change afterPath="$PROJECT_DIR$/01/data/interim/e5/noise_stats.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/data/interim/e5/qc_catalog.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/data/interim/e5/radiometer_curve.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/data/interim/e5/run_catalog.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/data/processed/e5/tables/T2_e5_runs.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/data/processed/e5/tables/T6_e5_radiometer_summary.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/data/raw/e5.tar.gz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/report/figures/F10_noise_histogram_physical.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/report/figures/F11_radiometer_scaling_physical.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/report/figures/F12_acf_spectrum_consistency_physical.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/scripts/analyze/run_e5_pipeline.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/control/e4_planning.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/e5.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/tests/unit/test_control_e4_planning.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/01/tests/unit/test_pipeline_e5.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/01.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/01/01.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/AGENTS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/data/interim/e3/spectrum_profile.csv" beforeDir="false" afterPath="$PROJECT_DIR$/01/data/interim/e3/spectrum_profile.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/report/figures/F5_complex_voltage_components_physical.png" beforeDir="false" afterPath="$PROJECT_DIR$/01/report/figures/F5_complex_voltage_components_physical.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/report/figures/F6_voltage_vs_power_physical.png" beforeDir="false" afterPath="$PROJECT_DIR$/01/report/figures/F6_voltage_vs_power_physical.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/manual_capture_common.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/manual_capture_common.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e4_acquire.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e4_acquire.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e6_acquire.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e6_acquire.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e7_acquire.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/acquire/run_e7_acquire.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/scripts/analyze/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/01/scripts/analyze/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/control/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/sdr.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/control/sdr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/__init__.py" afterDir="false" />
+    <list default="true" id="1006305a-a351-41ba-bb3c-24ef1656b7ec" name="Changes" comment="[LAB01] Automate sweeping for Experiment 4, 6 and 7">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/01.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/AGENTS.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/configs/experiments/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/configs/instruments/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e1/qc_catalog.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e1/run_catalog.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e2/bandpass_curves.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e2/qc_catalog.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e2/run_catalog.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e3/qc_catalog.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e3/run_catalog.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e3/spectrum_profile.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e5/noise_stats.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e5/qc_catalog.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e5/radiometer_curve.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/interim/e5/run_catalog.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/manifests/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/processed/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/processed/e1/tables/T2_e1_runs.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/processed/e1/tables/T3_e1_alias_residuals.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/processed/e2/tables/T2_e2_runs.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/processed/e2/tables/T4_e2_bandpass_summary.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/processed/e3/tables/T2_e3_runs.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/processed/e5/tables/T2_e5_runs.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/processed/e5/tables/T6_e5_radiometer_summary.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/raw/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/raw/e1.tar.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/raw/e2.tar.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/raw/e3.tar.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/data/raw/e5.tar.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/docs/decisions/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/docs/methods/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/docs/methods/execution_sheet.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/docs/requirements/allmixers_traceability.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/pyproject.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/report/captions/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/report/checklist.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/report/figures/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/report/figures/F10_noise_histogram_physical.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/report/figures/F11_radiometer_scaling_physical.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/report/figures/F12_acf_spectrum_consistency_physical.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/report/figures/F2_alias_map_physical.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/report/figures/F4_bandpass_curves_physical.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/report/figures/F5_complex_voltage_components_physical.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/report/figures/F6_voltage_vs_power_physical.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/report/tables/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/requirements-dev.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/manual_capture_common.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e1_acquire.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e2_acquire.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e3_acquire.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e4_acquire.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e5_acquire.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e6_acquire.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/acquire/run_e7_acquire.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/analyze/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/analyze/run_e1_pipeline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/analyze/run_e2_pipeline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/analyze/run_e3_pipeline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/analyze/run_e5_pipeline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/organize/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/plot/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/scripts/sim/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/analysis/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/analysis/bandpass.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/analysis/leakage.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/analysis/mixers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/analysis/noise.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/analysis/nyquist.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/analysis/resolution.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/analysis/spectra.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/acquisition.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/e4_planning.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/sdr.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/control/siggen.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/dataio/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/dataio/catalog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/dataio/io_npz.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/dataio/schema.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/e1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/e2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/e3.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/pipeline/e5.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/plotting/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/plotting/axes_plots.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/plotting/figure_builders.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/plotting/style.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/sim/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/sim/mixers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/sim/noise.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/sim/nyquist.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/utils/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/utils/units.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/src/ugradio_lab1/utils/validation.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/conftest.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/fixtures/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/hardware/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/integration/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_axes_plots.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_bandpass_analysis.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_control_acquisition.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_control_e4_planning.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_control_sdr.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_control_siggen.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_dataio_catalog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_dataio_io_npz.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_dataio_schema.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_figure_builders.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_imports.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_leakage_analysis.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_mixers_analysis.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_noise_analysis.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_nyquist_analysis.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_pipeline_e1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_pipeline_e2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_pipeline_e3.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_pipeline_e5.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_plot_style.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_resolution_analysis.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_sim_mixers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_sim_noise.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_sim_nyquist.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_spectra.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01/tests/unit/test_validation_utils.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,57 +150,58 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="SET_USER_NAME_GLOBALLY" value="false" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "raw-asparagus"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;raw-asparagus&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/raw-asparagus/astron-121.git",
-    "accountId": "f278d0be-76c3-40af-9eeb-037301cbd5fa"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/raw-asparagus/astron-121.git&quot;,
+    &quot;accountId&quot;: &quot;f278d0be-76c3-40af-9eeb-037301cbd5fa&quot;
   }
-}]]></component>
+}</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="39Pd4mjIdOsDnVXFjtWuv4dfEtb" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "ai.playground.ignore.import.keys.banner.in.settings": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/junruiting/GitHub/astron-121",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/junruiting/GitHub/astron-121&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecapSpentCounter">
     <option name="endsOfQuotaMs" value="1772784029193" />
+    <option name="spentUsd" value="0.007722" />
   </component>
   <component name="RecapUselessUpdatesCounter">
-    <option name="suspendCountdown" value="6" />
+    <option name="suspendCountdown" value="0" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -120,7 +223,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1770601450934</updated>
-      <workItem from="1770601451980" duration="13684000" />
+      <workItem from="1770601451980" duration="17934000" />
+      <workItem from="1770671622408" duration="1774000" />
+      <workItem from="1770714556588" duration="21000" />
     </task>
     <task id="LOCAL-00001" summary="[LAB01] Initial clone from working ugradio branch">
       <option name="closed" value="true" />
@@ -202,7 +307,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770618615184</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="[LAB01] Automate sweeping for Experiment 4, 6 and 7">
+      <option name="closed" value="true" />
+      <created>1770620811479</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1770620811479</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -218,6 +331,7 @@
     <MESSAGE value="[LAB01] Add all other experiment code" />
     <MESSAGE value="[LAB01] Remove auto signal generator polling" />
     <MESSAGE value="[LAB01] Automate sweeping for Experiment 4" />
-    <option name="LAST_COMMIT_MESSAGE" value="[LAB01] Automate sweeping for Experiment 4" />
+    <MESSAGE value="[LAB01] Automate sweeping for Experiment 4, 6 and 7" />
+    <option name="LAST_COMMIT_MESSAGE" value="[LAB01] Automate sweeping for Experiment 4, 6 and 7" />
   </component>
 </project>

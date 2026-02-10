@@ -52,6 +52,27 @@ cd labs/01
 /Users/junruiting/GitHub/ugradio/.venv/bin/python3 scripts/analyze/run_e3_pipeline.py
 ```
 
+## E4 Physical Pipeline
+
+`run_e4_pipeline.py` consumes raw E4 analysis source (default `data/raw/e3.tar.gz` for E3-bootstrapped E4 analysis) and writes:
+- `data/interim/e4/run_catalog.csv`
+- `data/interim/e4/qc_catalog.csv`
+- `data/interim/e4/leakage_metrics.csv`
+- `data/interim/e4/resolution_curve.csv`
+- `data/interim/e4/window_spectra.csv`
+- `data/processed/e4/tables/T2_e4_runs.csv`
+- `data/processed/e4/tables/T5_e4_leakage_resolution.csv`
+- `report/figures/F7_leakage_comparison_physical.png`
+- `report/figures/F8_resolution_vs_n_physical.png`
+- `report/figures/F9_multi_window_spectra_physical.png`
+
+Example:
+
+```bash
+cd labs/01
+/Users/junruiting/GitHub/ugradio/.venv/bin/python3 scripts/analyze/run_e4_pipeline.py --raw-source data/raw/e3.tar.gz
+```
+
 ## E5 Physical Pipeline
 
 `run_e5_pipeline.py` consumes raw E5 NPZ input (default `data/raw/e5.tar.gz`) and writes:

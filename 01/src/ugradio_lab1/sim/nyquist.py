@@ -10,9 +10,11 @@ import numpy as np
 import pandas as pd
 from scipy import signal
 
-from ugradio_lab1.analysis.bandpass import bandpass_curve
-from ugradio_lab1.analysis.leakage import nyquist_window_extension
-from ugradio_lab1.analysis.nyquist import predict_alias_frequency
+from ugradio_lab1.analysis.experiments import (
+    bandpass_curve,
+    nyquist_window_extension,
+    predict_alias_frequency,
+)
 from ugradio_lab1.analysis.spectra import power_spectrum
 from ugradio_lab1.utils.validation import as_1d_array
 
@@ -201,7 +203,12 @@ def simulate_alias_sweep(
     run_id_prefix: str = "sim_e1_",
     rng: np.random.Generator | int | None = None,
 ) -> AliasSweepSimulation:
-    """Simulate E1 alias-map captures and recover measured aliases."""
+    """Simulate E1 alias-map captures and recover unsigned alias magnitudes.
+
+    The returned ``predicted_alias_hz`` and ``measured_alias_hz`` values are
+    folded magnitudes in ``[0, fs/2]`` for direct comparison to physical E1
+    analyses that report positive alias frequency.
+    """
 
     f_true = as_1d_array(np.asarray(f_true_hz, dtype=float), "f_true_hz", dtype=float)
     fs_array = np.asarray(sample_rate_hz, dtype=float)
@@ -214,7 +221,7 @@ def simulate_alias_sweep(
     if np.any(sample_rates <= 0.0):
         raise ValueError("sample_rate_hz must be positive.")
 
-    predicted_alias = predict_alias_frequency(f_true, sample_rates)
+    predicted_alias = np.abs(predict_alias_frequency(f_true, sample_rates))
 
     rows: list[dict[str, float | int | str | bool]] = []
     voltage_by_run: dict[str, np.ndarray] = {}
@@ -229,12 +236,13 @@ def simulate_alias_sweep(
             complex_output=complex_output,
             rng=rng,
         )
-        measured = estimate_peak_frequency(
+        measured_signed = estimate_peak_frequency(
             voltage,
             sample_rate_hz=float(fs),
             fft_backend=fft_backend,
             positive_only=not complex_output,
         )
+        measured = float(abs(measured_signed))
         rows.append(
             {
                 "run_id": run_id,

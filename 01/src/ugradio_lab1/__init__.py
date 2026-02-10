@@ -7,5 +7,6 @@ __all__ = [
     "pipeline",
     "analysis",
     "plotting",
+    "experiment",
     "utils",
 ]

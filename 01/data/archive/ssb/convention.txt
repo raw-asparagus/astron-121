@@ -1,0 +1,6 @@
+For .npz files in this subdirectory, chX-Y-ZVpp/run-M-N.npz
+- X denotes the channel 1 or 2 (matched with RF and LO)
+- Y denotes RF frequency
+- Z denotes the Vrms of both channels
+- M denotes the LO frequency
+- N denotes the sampling frequency

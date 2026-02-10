@@ -1,10 +1,12 @@
-"""Axes-level plotting functions that receive a Matplotlib Axes object."""
+"""Axes-level plotting functions and centralized style configuration."""
 
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from typing import Literal
+from contextlib import contextmanager
+from typing import Iterator, Literal
 
+import matplotlib as mpl
 import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.collections import PathCollection
@@ -12,7 +14,57 @@ from matplotlib.container import BarContainer
 from matplotlib.lines import Line2D
 from matplotlib.text import Text
 
-from ugradio_lab1.utils.validation import as_1d_array
+from ugradio_lab1.utils.validation import as_1d_array, require_same_length
+
+# ---------------------------------------------------------------------------
+# Style configuration
+# ---------------------------------------------------------------------------
+
+LAB_RC_PARAMS: dict[str, object] = {
+    "axes.grid": True,
+    "grid.alpha": 0.25,
+    "grid.linestyle": "-",
+    "axes.spines.top": False,
+    "axes.spines.right": False,
+    "axes.titlesize": 12,
+    "axes.labelsize": 10,
+    "legend.fontsize": 9,
+    "figure.titlesize": 13,
+    "xtick.labelsize": 9,
+    "ytick.labelsize": 9,
+    "savefig.dpi": 180,
+    "axes.prop_cycle": mpl.cycler(
+        color=["#1f77b4", "#d62728", "#2ca02c", "#ff7f0e", "#9467bd", "#8c564b"]
+    ),
+}
+
+
+def get_lab_rc_params(*, overrides: Mapping[str, object] | None = None) -> dict[str, object]:
+    """Return style parameters for Lab 1 plots."""
+
+    merged = dict(LAB_RC_PARAMS)
+    if overrides:
+        merged.update(dict(overrides))
+    return merged
+
+
+def apply_lab_style(*, overrides: Mapping[str, object] | None = None) -> None:
+    """Apply Lab 1 style globally via Matplotlib rcParams."""
+
+    mpl.rcParams.update(get_lab_rc_params(overrides=overrides))
+
+
+@contextmanager
+def lab_style_context(*, overrides: Mapping[str, object] | None = None) -> Iterator[None]:
+    """Temporarily apply Lab 1 plot style in a context manager."""
+
+    with mpl.rc_context(get_lab_rc_params(overrides=overrides)):
+        yield
+
+
+# ---------------------------------------------------------------------------
+# Axes-level plotting functions
+# ---------------------------------------------------------------------------
 
 VoltageComponent = Literal["real", "imag", "magnitude", "phase"]
 CorrelationComponent = Literal["real", "imag", "magnitude"]
@@ -38,7 +90,7 @@ def plot_time_series(
 
     time = as_1d_array(time_s, "time_s", dtype=float)
     voltage = as_1d_array(voltage_v, "voltage_v")
-    _require_same_length(time, voltage, "time_s", "voltage_v")
+    require_same_length(time, voltage, "time_s", "voltage_v")
     time, voltage = _apply_sample_slice_pair(time, voltage, sample_slice)
 
     line, = ax.plot(time, voltage, label=label, color=color, linewidth=linewidth, alpha=alpha)
@@ -70,7 +122,7 @@ def plot_voltage_spectrum(
 
     frequency = as_1d_array(frequency_hz, "frequency_hz", dtype=float)
     spectrum = as_1d_array(spectrum_v, "spectrum_v")
-    _require_same_length(frequency, spectrum, "frequency_hz", "spectrum_v")
+    require_same_length(frequency, spectrum, "frequency_hz", "spectrum_v")
 
     if component == "real":
         y = np.real(spectrum)
@@ -118,7 +170,7 @@ def plot_power_spectrum(
 
     frequency = as_1d_array(frequency_hz, "frequency_hz", dtype=float)
     power_values = as_1d_array(power, "power", dtype=float)
-    _require_same_length(frequency, power_values, "frequency_hz", "power")
+    require_same_length(frequency, power_values, "frequency_hz", "power")
 
     if np.any(power_values < 0.0):
         raise ValueError("power values must be non-negative.")
@@ -164,7 +216,7 @@ def plot_autocorrelation(
 
     lag = as_1d_array(lag_s, "lag_s", dtype=float)
     correlation = as_1d_array(autocorrelation_values, "autocorrelation_values")
-    _require_same_length(lag, correlation, "lag_s", "autocorrelation_values")
+    require_same_length(lag, correlation, "lag_s", "autocorrelation_values")
 
     if component == "real":
         y = np.real(correlation)
@@ -292,7 +344,7 @@ def plot_iq_scatter(
 
     i_values = as_1d_array(i_samples_v, "i_samples_v", dtype=float)
     q_values = as_1d_array(q_samples_v, "q_samples_v", dtype=float)
-    _require_same_length(i_values, q_values, "i_samples_v", "q_samples_v")
+    require_same_length(i_values, q_values, "i_samples_v", "q_samples_v")
 
     scatter = ax.scatter(i_values, q_values, s=marker_size, alpha=alpha, label=label, color=color)
     if center_lines:
@@ -330,13 +382,13 @@ def plot_alias_map(
 
     true_frequency = as_1d_array(true_frequency_hz, "true_frequency_hz", dtype=float)
     measured_alias = as_1d_array(measured_alias_hz, "measured_alias_hz", dtype=float)
-    _require_same_length(true_frequency, measured_alias, "true_frequency_hz", "measured_alias_hz")
+    require_same_length(true_frequency, measured_alias, "true_frequency_hz", "measured_alias_hz")
 
     measured_artist = ax.scatter(true_frequency, measured_alias, s=24.0, alpha=0.9, label=label_measured)
     predicted_artist: Line2D | PathCollection | None = None
     if predicted_alias_hz is not None:
         predicted_alias = as_1d_array(predicted_alias_hz, "predicted_alias_hz", dtype=float)
-        _require_same_length(true_frequency, predicted_alias, "true_frequency_hz", "predicted_alias_hz")
+        require_same_length(true_frequency, predicted_alias, "true_frequency_hz", "predicted_alias_hz")
         if predicted_as_scatter:
             predicted_artist = ax.scatter(
                 true_frequency,
@@ -380,7 +432,7 @@ def plot_alias_map(
             residual = measured_alias - predicted_alias
         else:
             residual = as_1d_array(residual_hz, "residual_hz", dtype=float)
-            _require_same_length(true_frequency, residual, "true_frequency_hz", "residual_hz")
+            require_same_length(true_frequency, residual, "true_frequency_hz", "residual_hz")
         residual_artist = residual_ax.scatter(true_frequency, residual, s=18.0, alpha=0.9)
         residual_ax.axhline(0.0, linestyle="--", linewidth=1.0, color="0.5")
         residual_ax.set_xlabel(xlabel)
@@ -416,7 +468,7 @@ def plot_bandpass_curves(
     lines: list[Line2D] = []
     for mode, gain_db in gain_db_by_mode.items():
         gain_values = as_1d_array(gain_db, f"gain_db_by_mode[{mode!r}]", dtype=float)
-        _require_same_length(frequency, gain_values, "frequency_hz", f"gain_db_by_mode[{mode!r}]")
+        require_same_length(frequency, gain_values, "frequency_hz", f"gain_db_by_mode[{mode!r}]")
         line, = ax.plot(frequency, gain_values, linewidth=linewidth, label=mode)
         lines.append(line)
 
@@ -446,7 +498,7 @@ def plot_resolution_vs_n(
 
     n_values = as_1d_array(n_samples, "n_samples", dtype=float)
     measured = as_1d_array(measured_delta_f_hz, "measured_delta_f_hz", dtype=float)
-    _require_same_length(n_values, measured, "n_samples", "measured_delta_f_hz")
+    require_same_length(n_values, measured, "n_samples", "measured_delta_f_hz")
     if np.any(n_values <= 0.0):
         raise ValueError("n_samples must be positive.")
     if np.any(measured <= 0.0):
@@ -463,7 +515,7 @@ def plot_resolution_vs_n(
             theory = float(fs) / n_values
         else:
             fs_values = as_1d_array(fs, "sample_rate_hz", dtype=float)
-            _require_same_length(n_values, fs_values, "n_samples", "sample_rate_hz")
+            require_same_length(n_values, fs_values, "n_samples", "sample_rate_hz")
             if np.any(fs_values <= 0.0):
                 raise ValueError("sample_rate_hz must be positive.")
             theory = fs_values / n_values
@@ -499,7 +551,7 @@ def plot_radiometer_fit(
 
     n_values = as_1d_array(n_avg, "n_avg", dtype=float)
     sigma_values = as_1d_array(sigma, "sigma", dtype=float)
-    _require_same_length(n_values, sigma_values, "n_avg", "sigma")
+    require_same_length(n_values, sigma_values, "n_avg", "sigma")
     if np.any(n_values <= 0.0):
         raise ValueError("n_avg must be positive.")
     if np.any(sigma_values <= 0.0):
@@ -569,7 +621,7 @@ def plot_spur_survey(
 
     freq = as_1d_array(frequency_hz, "frequency_hz", dtype=float)
     power_values = as_1d_array(power, "power", dtype=float)
-    _require_same_length(freq, power_values, "frequency_hz", "power")
+    require_same_length(freq, power_values, "frequency_hz", "power")
 
     spectrum_line = plot_power_spectrum(
         ax,
@@ -627,7 +679,7 @@ def plot_iq_phase_trajectory(
 
     i_values = as_1d_array(i_samples_v, "i_samples_v", dtype=float)
     q_values = as_1d_array(q_samples_v, "q_samples_v", dtype=float)
-    _require_same_length(i_values, q_values, "i_samples_v", "q_samples_v")
+    require_same_length(i_values, q_values, "i_samples_v", "q_samples_v")
 
     trajectory, = ax.plot(i_values, q_values, linewidth=linewidth, alpha=alpha, label=label, color=color)
     start_artist = None
@@ -666,8 +718,8 @@ def plot_time_series_comparison(
     time = as_1d_array(time_s, "time_s", dtype=float)
     reference = as_1d_array(reference_voltage_v, "reference_voltage_v")
     comparison = as_1d_array(comparison_voltage_v, "comparison_voltage_v")
-    _require_same_length(time, reference, "time_s", "reference_voltage_v")
-    _require_same_length(time, comparison, "time_s", "comparison_voltage_v")
+    require_same_length(time, reference, "time_s", "reference_voltage_v")
+    require_same_length(time, comparison, "time_s", "comparison_voltage_v")
     time, reference, comparison = _apply_sample_slice_triplet(
         time, reference, comparison, sample_slice
     )
@@ -718,7 +770,7 @@ def plot_windowed_spectra(
     artists: list[Line2D] = []
     for window_name, power in power_by_window.items():
         power_values = as_1d_array(power, f"power_by_window[{window_name!r}]", dtype=float)
-        _require_same_length(
+        require_same_length(
             frequency, power_values, "frequency_hz", f"power_by_window[{window_name!r}]"
         )
         line = plot_power_spectrum(
@@ -795,8 +847,8 @@ def plot_power_spectrum_comparison(
     frequency = as_1d_array(frequency_hz, "frequency_hz", dtype=float)
     power_a = as_1d_array(power_a_v2, "power_a_v2", dtype=float)
     power_b = as_1d_array(power_b_v2, "power_b_v2", dtype=float)
-    _require_same_length(frequency, power_a, "frequency_hz", "power_a_v2")
-    _require_same_length(frequency, power_b, "frequency_hz", "power_b_v2")
+    require_same_length(frequency, power_a, "frequency_hz", "power_a_v2")
+    require_same_length(frequency, power_b, "frequency_hz", "power_b_v2")
 
     line_a = plot_power_spectrum(
         ax,
@@ -866,30 +918,24 @@ def _apply_sample_slice_triplet(
     return sliced_time, sliced_first, sliced_second
 
 
-def _require_same_length(
-    left: np.ndarray,
-    right: np.ndarray,
-    left_name: str,
-    right_name: str,
-) -> None:
-    if left.size != right.size:
-        raise ValueError(f"{left_name} and {right_name} must have the same length.")
-
-
 __all__ = [
+    "LAB_RC_PARAMS",
+    "apply_lab_style",
+    "get_lab_rc_params",
+    "lab_style_context",
     "plot_alias_map",
-    "plot_bandpass_curves",
     "plot_autocorrelation",
+    "plot_bandpass_curves",
     "plot_histogram_with_gaussian",
-    "plot_iq_scatter",
     "plot_iq_phase_trajectory",
+    "plot_iq_scatter",
     "plot_power_spectrum",
     "plot_power_spectrum_comparison",
     "plot_radiometer_fit",
     "plot_resolution_vs_n",
     "plot_spur_survey",
-    "plot_time_series_comparison",
     "plot_time_series",
+    "plot_time_series_comparison",
     "plot_voltage_spectrum",
     "plot_waveform_comparison",
     "plot_windowed_spectra",

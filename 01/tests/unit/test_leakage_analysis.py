@@ -4,9 +4,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from ugradio_lab1.analysis.leakage import (
+from ugradio_lab1.analysis.experiments import (
     leakage_metric,
-    leakage_resolution_table,
     nyquist_window_extension,
 )
 
@@ -24,36 +23,6 @@ def test_leakage_metric_computes_fraction() -> None:
 
     assert metrics["main_bin_index"] == 3.0
     assert 0.0 < metrics["leakage_fraction"] < 0.01
-
-
-def test_leakage_resolution_table_t5_columns() -> None:
-    records = [
-        {
-            "run_id": "r1",
-            "n_samples": 256,
-            "sample_rate_hz": 1024.0,
-            "leakage_metric": 0.1,
-            "measured_delta_f_hz": 5.0,
-        },
-        {
-            "run_id": "r2",
-            "n_samples": 512,
-            "sample_rate_hz": 1024.0,
-            "leakage_metric": 0.05,
-            "measured_delta_f_hz": 2.5,
-        },
-    ]
-
-    table = leakage_resolution_table(records)
-
-    assert list(table.columns) == [
-        "run_id",
-        "n_samples",
-        "delta_f_bin_hz",
-        "leakage_metric",
-        "min_resolvable_delta_f_hz",
-    ]
-    assert np.allclose(table["delta_f_bin_hz"].to_numpy(), np.array([4.0, 2.0]))
 
 
 def test_nyquist_window_extension_replicates_windows() -> None:

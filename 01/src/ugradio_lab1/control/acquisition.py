@@ -220,12 +220,7 @@ def run_e1_acquisition(
     """
 
     _validate_e1_config(config)
-    config.raw_dir.mkdir(parents=True, exist_ok=True)
-    config.t2_manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    config.progress_path.parent.mkdir(parents=True, exist_ok=True)
-
-    progress = _read_progress(config.progress_path)
-    controller = siggen or N9310AUSBTMC(device_path=config.siggen_device_path, retry=config.siggen_retry)
+    progress, controller = _prepare_acquisition(config=config, siggen=siggen)
     fir_modes = e1_fir_modes()
     power_tiers = e1_power_tiers_dbm(config)
 
@@ -259,18 +254,18 @@ def run_e1_acquisition(
                                 continue
                             progress = _upsert_progress_row(
                                 progress,
-                                {
-                                    "timestamp_utc": timestamp_utc,
-                                    "run_id": run_id,
-                                    "combo_key": combo_key,
-                                    "experiment": config.experiment_id,
-                                    "sample_rate_hz": float(sample_rate_hz),
-                                    "frequency_hz": float(signal_frequency_hz),
-                                    "fir_mode": fir_mode,
-                                    "power_dbm": float(requested_power_dbm),
-                                    "final_status": "error_io",
-                                    "message": f"siggen_frequency_error:{error}",
-                                },
+                                _build_progress_row(
+                                    config=config,
+                                    run_id=run_id,
+                                    combo_key=combo_key,
+                                    sample_rate_hz=sample_rate_hz,
+                                    signal_frequency_hz=signal_frequency_hz,
+                                    fir_mode=fir_mode,
+                                    power_dbm=requested_power_dbm,
+                                    final_status="error_io",
+                                    message=f"siggen_frequency_error:{error}",
+                                    timestamp_utc=timestamp_utc,
+                                ),
                             )
                         _write_progress(config.progress_path, progress)
                         continue
@@ -281,92 +276,23 @@ def run_e1_acquisition(
                         if _is_run_completed(progress, run_id):
                             continue
 
-                        loaded = _load_measurement_from_npz(npz_path) if npz_path.exists() else None
-                        if loaded is not None:
-                            final_status = _measurement_status(loaded)
-                            message = "loaded_existing_npz"
-                            measurement = loaded
-                        else:
-                            measurement = _capture_measurement(
-                                config=config,
-                                controller=controller,
-                                sdr_factory=sdr_factory,
-                                sample_rate_hz=sample_rate_hz,
-                                fir_coeffs=fir_coeffs,
-                                requested_power_dbm=requested_power_dbm,
-                            )
-                            if measurement is None:
-                                progress = _upsert_progress_row(
-                                    progress,
-                                    {
-                                        "timestamp_utc": _utc_now(),
-                                        "run_id": run_id,
-                                        "combo_key": combo_key,
-                                        "experiment": config.experiment_id,
-                                        "sample_rate_hz": float(sample_rate_hz),
-                                        "frequency_hz": float(signal_frequency_hz),
-                                        "fir_mode": fir_mode,
-                                        "power_dbm": float(requested_power_dbm),
-                                        "final_status": "error_io",
-                                        "message": "capture_failed",
-                                        "npz_path": str(npz_path),
-                                    },
-                                )
-                                _write_progress(config.progress_path, progress)
-                                continue
-                            final_status = _measurement_status(measurement)
-                            message = (
-                                "capture_complete"
-                                if final_status == "captured"
-                                else "capture_complete_guard_fail"
-                            )
-                            _save_measurement_npz(
-                                run_id=run_id,
-                                npz_path=npz_path,
-                                run_kind="power_tier_capture",
-                                config=config,
-                                sample_rate_hz=sample_rate_hz,
-                                signal_frequency_hz=signal_frequency_hz,
-                                measured_frequency_hz=measured_frequency_hz,
-                                fir_mode=fir_mode,
-                                fir_coeffs=fir_coeffs,
-                                measurement=measurement,
-                                status=final_status,
-                            )
-
-                        _append_t2_manifest_row(
+                        progress = _process_capture_run(
+                            progress=progress,
                             config=config,
+                            controller=controller,
+                            sdr_factory=sdr_factory,
                             run_id=run_id,
+                            combo_key=combo_key,
+                            npz_path=npz_path,
                             sample_rate_hz=sample_rate_hz,
                             signal_frequency_hz=signal_frequency_hz,
                             requested_power_dbm=requested_power_dbm,
+                            measured_frequency_hz=measured_frequency_hz,
                             fir_mode=fir_mode,
+                            fir_coeffs=fir_coeffs,
                             run_kind="physical_power_tier",
+                            npz_run_kind="power_tier_capture",
                         )
-                        progress = _upsert_progress_row(
-                            progress,
-                            {
-                                "timestamp_utc": _utc_now(),
-                                "run_id": run_id,
-                                "combo_key": combo_key,
-                                "experiment": config.experiment_id,
-                                "sample_rate_hz": float(sample_rate_hz),
-                                "frequency_hz": float(signal_frequency_hz),
-                                "fir_mode": fir_mode,
-                                "power_dbm": float(requested_power_dbm),
-                                "final_status": final_status,
-                                "message": message,
-                                "npz_path": str(npz_path),
-                                "adc_rms": measurement.capture.summary.mean_block_rms,
-                                "adc_max": measurement.capture.summary.adc_max,
-                                "adc_min": measurement.capture.summary.adc_min,
-                                "is_clipped": measurement.capture.summary.is_clipped,
-                                "guard_passed": measurement.capture.summary.passes_guard,
-                                "requested_sample_rate_hz": measurement.capture.requested_sample_rate_hz,
-                                "actual_sample_rate_hz": measurement.capture.actual_sample_rate_hz,
-                            },
-                        )
-                        _write_progress(config.progress_path, progress)
     finally:
         try:
             controller.rf_off()
@@ -390,12 +316,7 @@ def run_e2_acquisition(
     """
 
     _validate_e2_config(config)
-    config.raw_dir.mkdir(parents=True, exist_ok=True)
-    config.t2_manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    config.progress_path.parent.mkdir(parents=True, exist_ok=True)
-
-    progress = _read_progress(config.progress_path)
-    controller = siggen or N9310AUSBTMC(device_path=config.siggen_device_path, retry=config.siggen_retry)
+    progress, controller = _prepare_acquisition(config=config, siggen=siggen)
 
     controller.rf_on()
     try:
@@ -424,111 +345,42 @@ def run_e2_acquisition(
                     controller.set_freq_mhz(signal_frequency_hz / 1e6)
                     measured_frequency_hz = float(signal_frequency_hz)
                 except Exception as error:
-                    progress = _upsert_progress_row(
-                        progress,
-                        {
-                            "timestamp_utc": timestamp_utc,
-                            "run_id": run_id,
-                            "combo_key": combo_key,
-                            "experiment": config.experiment_id,
-                            "sample_rate_hz": float(sample_rate_hz),
-                            "frequency_hz": float(signal_frequency_hz),
-                            "fir_mode": config.fir_mode,
-                            "power_dbm": float(config.source_power_dbm),
-                            "final_status": "error_io",
-                            "message": f"siggen_frequency_error:{error}",
-                            "npz_path": str(npz_path),
-                        },
+                    progress = _persist_progress_row(
+                        progress=progress,
+                        path=config.progress_path,
+                        row=_build_progress_row(
+                            config=config,
+                            run_id=run_id,
+                            combo_key=combo_key,
+                            sample_rate_hz=sample_rate_hz,
+                            signal_frequency_hz=signal_frequency_hz,
+                            fir_mode=config.fir_mode,
+                            power_dbm=config.source_power_dbm,
+                            final_status="error_io",
+                            message=f"siggen_frequency_error:{error}",
+                            timestamp_utc=timestamp_utc,
+                            npz_path=npz_path,
+                        ),
                     )
-                    _write_progress(config.progress_path, progress)
                     continue
 
-                loaded = _load_measurement_from_npz(npz_path) if npz_path.exists() else None
-                if loaded is not None:
-                    final_status = _measurement_status(loaded)
-                    message = "loaded_existing_npz"
-                    measurement = loaded
-                else:
-                    measurement = _capture_measurement(
-                        config=config,
-                        controller=controller,
-                        sdr_factory=sdr_factory,
-                        sample_rate_hz=sample_rate_hz,
-                        fir_coeffs=config.fir_coeffs,
-                        requested_power_dbm=config.source_power_dbm,
-                    )
-                    if measurement is None:
-                        progress = _upsert_progress_row(
-                            progress,
-                            {
-                                "timestamp_utc": _utc_now(),
-                                "run_id": run_id,
-                                "combo_key": combo_key,
-                                "experiment": config.experiment_id,
-                                "sample_rate_hz": float(sample_rate_hz),
-                                "frequency_hz": float(signal_frequency_hz),
-                                "fir_mode": config.fir_mode,
-                                "power_dbm": float(config.source_power_dbm),
-                                "final_status": "error_io",
-                                "message": "capture_failed",
-                                "npz_path": str(npz_path),
-                            },
-                        )
-                        _write_progress(config.progress_path, progress)
-                        continue
-                    final_status = _measurement_status(measurement)
-                    message = (
-                        "capture_complete"
-                        if final_status == "captured"
-                        else "capture_complete_guard_fail"
-                    )
-                    _save_measurement_npz(
-                        run_id=run_id,
-                        npz_path=npz_path,
-                        run_kind="bandpass_sweep_capture",
-                        config=config,
-                        sample_rate_hz=sample_rate_hz,
-                        signal_frequency_hz=signal_frequency_hz,
-                        measured_frequency_hz=measured_frequency_hz,
-                        fir_mode=config.fir_mode,
-                        fir_coeffs=config.fir_coeffs,
-                        measurement=measurement,
-                        status=final_status,
-                    )
-
-                _append_t2_manifest_row(
+                progress = _process_capture_run(
+                    progress=progress,
                     config=config,
+                    controller=controller,
+                    sdr_factory=sdr_factory,
                     run_id=run_id,
+                    combo_key=combo_key,
+                    npz_path=npz_path,
                     sample_rate_hz=sample_rate_hz,
                     signal_frequency_hz=signal_frequency_hz,
                     requested_power_dbm=config.source_power_dbm,
+                    measured_frequency_hz=measured_frequency_hz,
                     fir_mode=config.fir_mode,
+                    fir_coeffs=config.fir_coeffs,
                     run_kind="physical_bandpass",
+                    npz_run_kind="bandpass_sweep_capture",
                 )
-                progress = _upsert_progress_row(
-                    progress,
-                    {
-                        "timestamp_utc": _utc_now(),
-                        "run_id": run_id,
-                        "combo_key": combo_key,
-                        "experiment": config.experiment_id,
-                        "sample_rate_hz": float(sample_rate_hz),
-                        "frequency_hz": float(signal_frequency_hz),
-                        "fir_mode": config.fir_mode,
-                        "power_dbm": float(config.source_power_dbm),
-                        "final_status": final_status,
-                        "message": message,
-                        "npz_path": str(npz_path),
-                        "adc_rms": measurement.capture.summary.mean_block_rms,
-                        "adc_max": measurement.capture.summary.adc_max,
-                        "adc_min": measurement.capture.summary.adc_min,
-                        "is_clipped": measurement.capture.summary.is_clipped,
-                        "guard_passed": measurement.capture.summary.passes_guard,
-                        "requested_sample_rate_hz": measurement.capture.requested_sample_rate_hz,
-                        "actual_sample_rate_hz": measurement.capture.actual_sample_rate_hz,
-                    },
-                )
-                _write_progress(config.progress_path, progress)
     finally:
         try:
             controller.rf_off()
@@ -539,6 +391,200 @@ def run_e2_acquisition(
 
 def _measurement_status(measurement: CaptureMeasurement) -> str:
     return "captured" if measurement.capture.summary.passes_guard else "captured_guard_fail"
+
+
+def _prepare_acquisition(
+    *,
+    config: AcquisitionConfig,
+    siggen: N9310AUSBTMC | None,
+) -> tuple[pd.DataFrame, N9310AUSBTMC]:
+    config.raw_dir.mkdir(parents=True, exist_ok=True)
+    config.t2_manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    config.progress_path.parent.mkdir(parents=True, exist_ok=True)
+    progress = _read_progress(config.progress_path)
+    controller = siggen or N9310AUSBTMC(device_path=config.siggen_device_path, retry=config.siggen_retry)
+    return progress, controller
+
+
+def _build_progress_row(
+    *,
+    config: AcquisitionConfig,
+    run_id: str,
+    combo_key: str,
+    sample_rate_hz: float,
+    signal_frequency_hz: float,
+    fir_mode: str,
+    power_dbm: float,
+    final_status: str,
+    message: str,
+    timestamp_utc: str | None = None,
+    npz_path: Path | None = None,
+    measurement: CaptureMeasurement | None = None,
+) -> dict[str, Any]:
+    row: dict[str, Any] = {
+        "timestamp_utc": _utc_now() if timestamp_utc is None else timestamp_utc,
+        "run_id": run_id,
+        "combo_key": combo_key,
+        "experiment": config.experiment_id,
+        "sample_rate_hz": float(sample_rate_hz),
+        "frequency_hz": float(signal_frequency_hz),
+        "fir_mode": fir_mode,
+        "power_dbm": float(power_dbm),
+        "final_status": final_status,
+        "message": message,
+    }
+    if npz_path is not None:
+        row["npz_path"] = str(npz_path)
+    if measurement is not None:
+        row.update(
+            {
+                "adc_rms": measurement.capture.summary.mean_block_rms,
+                "adc_max": measurement.capture.summary.adc_max,
+                "adc_min": measurement.capture.summary.adc_min,
+                "is_clipped": measurement.capture.summary.is_clipped,
+                "guard_passed": measurement.capture.summary.passes_guard,
+                "requested_sample_rate_hz": measurement.capture.requested_sample_rate_hz,
+                "actual_sample_rate_hz": measurement.capture.actual_sample_rate_hz,
+            }
+        )
+    return row
+
+
+def _persist_progress_row(
+    *,
+    progress: pd.DataFrame,
+    path: Path,
+    row: dict[str, Any],
+) -> pd.DataFrame:
+    updated = _upsert_progress_row(progress, row)
+    _write_progress(path, updated)
+    return updated
+
+
+def _process_capture_run(
+    *,
+    progress: pd.DataFrame,
+    config: AcquisitionConfig,
+    controller: N9310AUSBTMC,
+    sdr_factory: Callable[..., Any] | None,
+    run_id: str,
+    combo_key: str,
+    npz_path: Path,
+    sample_rate_hz: float,
+    signal_frequency_hz: float,
+    requested_power_dbm: float,
+    measured_frequency_hz: float,
+    fir_mode: str,
+    fir_coeffs: np.ndarray | None,
+    run_kind: str,
+    npz_run_kind: str,
+) -> pd.DataFrame:
+    measurement, final_status, message = _load_or_capture_measurement(
+        config=config,
+        controller=controller,
+        sdr_factory=sdr_factory,
+        run_id=run_id,
+        npz_path=npz_path,
+        sample_rate_hz=sample_rate_hz,
+        signal_frequency_hz=signal_frequency_hz,
+        requested_power_dbm=requested_power_dbm,
+        measured_frequency_hz=measured_frequency_hz,
+        fir_mode=fir_mode,
+        fir_coeffs=fir_coeffs,
+        run_kind=npz_run_kind,
+    )
+    if measurement is None:
+        return _persist_progress_row(
+            progress=progress,
+            path=config.progress_path,
+            row=_build_progress_row(
+                config=config,
+                run_id=run_id,
+                combo_key=combo_key,
+                sample_rate_hz=sample_rate_hz,
+                signal_frequency_hz=signal_frequency_hz,
+                fir_mode=fir_mode,
+                power_dbm=requested_power_dbm,
+                final_status=final_status,
+                message=message,
+                npz_path=npz_path,
+            ),
+        )
+
+    _append_t2_manifest_row(
+        config=config,
+        run_id=run_id,
+        sample_rate_hz=sample_rate_hz,
+        signal_frequency_hz=signal_frequency_hz,
+        requested_power_dbm=requested_power_dbm,
+        fir_mode=fir_mode,
+        run_kind=run_kind,
+    )
+    return _persist_progress_row(
+        progress=progress,
+        path=config.progress_path,
+        row=_build_progress_row(
+            config=config,
+            run_id=run_id,
+            combo_key=combo_key,
+            sample_rate_hz=sample_rate_hz,
+            signal_frequency_hz=signal_frequency_hz,
+            fir_mode=fir_mode,
+            power_dbm=requested_power_dbm,
+            final_status=final_status,
+            message=message,
+            npz_path=npz_path,
+            measurement=measurement,
+        ),
+    )
+
+
+def _load_or_capture_measurement(
+    *,
+    config: AcquisitionConfig,
+    controller: N9310AUSBTMC,
+    sdr_factory: Callable[..., Any] | None,
+    run_id: str,
+    npz_path: Path,
+    sample_rate_hz: float,
+    signal_frequency_hz: float,
+    requested_power_dbm: float,
+    measured_frequency_hz: float,
+    fir_mode: str,
+    fir_coeffs: np.ndarray | None,
+    run_kind: str,
+) -> tuple[CaptureMeasurement | None, str, str]:
+    loaded = _load_measurement_from_npz(npz_path) if npz_path.exists() else None
+    if loaded is not None:
+        return loaded, _measurement_status(loaded), "loaded_existing_npz"
+
+    measurement = _capture_measurement(
+        config=config,
+        controller=controller,
+        sdr_factory=sdr_factory,
+        sample_rate_hz=sample_rate_hz,
+        fir_coeffs=fir_coeffs,
+        requested_power_dbm=requested_power_dbm,
+    )
+    if measurement is None:
+        return None, "error_io", "capture_failed"
+
+    final_status = _measurement_status(measurement)
+    message = "capture_complete" if final_status == "captured" else "capture_complete_guard_fail"
+    _save_measurement_npz(
+        run_id=run_id,
+        npz_path=npz_path,
+        run_kind=run_kind,
+        config=config,
+        sample_rate_hz=sample_rate_hz,
+        signal_frequency_hz=signal_frequency_hz,
+        measured_frequency_hz=measured_frequency_hz,
+        fir_mode=fir_mode,
+        fir_coeffs=fir_coeffs,
+        measurement=measurement,
+        status=final_status,
+    )
+    return measurement, final_status, message
 
 
 def _capture_measurement(

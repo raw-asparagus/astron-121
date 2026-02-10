@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from scipy import signal
 
-from ugradio_lab1.analysis.mixers import line_spur_catalog
+from ugradio_lab1.analysis.experiments import line_spur_catalog
 from ugradio_lab1.analysis.spectra import power_spectrum
 from ugradio_lab1.utils.validation import as_1d_array
 

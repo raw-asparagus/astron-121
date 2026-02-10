@@ -1,5 +1,3 @@
-"""Control subpackage for Lab 1 physical acquisition workflows."""
-
 from ugradio_lab1.control.acquisition import (
     DEFAULT_E1_PROGRESS_PATH,
     DEFAULT_E1_RAW_DIR,
@@ -16,7 +14,6 @@ from ugradio_lab1.control.acquisition import (
     run_e1_acquisition,
     run_e2_acquisition,
 )
-from ugradio_lab1.control.e4_planning import leakage_tone_from_center, resolution_tones_from_center
 from ugradio_lab1.control.sdr import (
     ADCSummary,
     SDRCaptureConfig,
@@ -47,8 +44,6 @@ __all__ = [
     "e1_frequency_grid_hz",
     "e1_power_tiers_dbm",
     "e2_frequency_grid_hz",
-    "leakage_tone_from_center",
-    "resolution_tones_from_center",
     "run_e1_acquisition",
     "run_e2_acquisition",
 ]

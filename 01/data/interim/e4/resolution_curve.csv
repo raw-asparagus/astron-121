@@ -1,0 +1,2 @@
+run_id,n_samples,sample_rate_hz,delta_f_bin_hz,true_delta_f_hz,measured_delta_f_hz,resolution_ratio,mode,e4_track,peak_a_hz,peak_b_hz,valley_depth_db,resolvable_bool,qc_analysis_pass,qc_recommended_pass
+e3_20260209T054629Z,2048,3200000.0,1562.5,83333.29999999999,82812.49999999997,52.99999999999998,two_tone,resolution,249999.99999999997,332812.49999999994,43.517239444288016,True,True,True

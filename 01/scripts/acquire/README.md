@@ -31,14 +31,11 @@ Place SDR/signal-generator control scripts here for lab data collection.
 - constant source power (`-10 dBm` default)
 - resume-safe skip logic from progress CSV
 
-## E3-E7 Runners
+## E3 / E5 Runners
 
-These scripts are for E3-E7 physical captures:
+These scripts are currently maintained for one-shot manual captures:
 - `run_e3_acquire.py`
-- `run_e4_acquire.py`
 - `run_e5_acquire.py`
-- `run_e6_acquire.py`
-- `run_e7_acquire.py`
 
 Shared behavior:
 - Validate CLI inputs.
@@ -46,19 +43,7 @@ Shared behavior:
 - Capture SDR data with guard-based recapture attempts.
 - Save NPZ data + metadata and append one T2 manifest row.
 - Signal setup is manual analog by default.
-- `run_e4_acquire.py` additionally supports optional SG USBTMC auto-programming.
 
 Parameter patterns:
 - E3: `Vrms`, SG1 required; SG2 required in `two_tone` mode.
-- E4: sweep runner by default (`50` runs) with mixed powers-of-two/non-powers-of-two bins (`N < 16384`).
-  Tone frequencies are auto-derived from `center_frequency_hz`:
-  - leakage mode (single-SG): `f = (k + epsilon) * (f_s / N)`
-  - resolution mode (two-SG): `f1 = f_center - delta/2`, `f2 = f_center + delta/2`
-  Optional SG programming can be enabled with `--auto-program-siggen`.
 - E5: `Vrms` and noise-source mode; no signal generator required.
-- E6: signed-`delta_nu` sweep between `- |delta|` and `+ |delta|`; SG2 is manual RF reference and
-  SG1 (LO) power matches SG2 while frequency follows `f1 = f2 - signed_delta`.
-- E7: signed-`delta_nu` sweep between `- |delta|` and `+ |delta|`; prompts whether the single SDR
-  capture is `I`/real or `Q`/imaginary voltage.
-  - `r820t_internal` mode defaults to `|delta| = 0.05 * nu` with
-    `nu = 1420.405751768 MHz`, forces `direct=False`, and sets SDR LO center to `nu`.

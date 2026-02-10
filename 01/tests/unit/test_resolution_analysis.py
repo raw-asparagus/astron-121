@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from ugradio_lab1.analysis.resolution import resolution_vs_n
+from ugradio_lab1.analysis.experiments import resolution_vs_n
 
 
 def test_resolution_vs_n_computes_delta_f_bin() -> None:

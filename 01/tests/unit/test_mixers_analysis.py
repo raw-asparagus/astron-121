@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from ugradio_lab1.analysis.mixers import (
+from ugradio_lab1.analysis.experiments import (
     expected_dsb_lines,
     line_spur_catalog,
     match_observed_lines,

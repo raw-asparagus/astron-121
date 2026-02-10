@@ -15,11 +15,9 @@ Core spectrum and plotting modules are scaffolded and implemented.
 - Plotting module: `labs/01/src/ugradio_lab1/plotting/axes_plots.py`
 - FFT backend selection is implemented in spectrum routines (`numpy` default, optional `ugradio`).
 - P0 analysis modules are implemented for deliverable-oriented metrics:
-  - `analysis/nyquist.py` (`predict_alias_frequency`, `alias_residual_table`)
-  - `analysis/bandpass.py` (`bandpass_curve`, `bandpass_summary_metrics`)
-  - `analysis/resolution.py` (`resolution_vs_n`)
-  - `analysis/noise.py` (`radiometer_fit`)
-  - `analysis/mixers.py` (`expected_dsb_lines`, `match_observed_lines`)
+  - `analysis/experiments.py` (all lab1-specific analysis: `bandpass_curve`, `expected_dsb_lines`,
+    `match_observed_lines`, `line_spur_catalog`, `radiometer_fit`, `predict_alias_frequency`,
+    `leakage_metric`, `nyquist_window_extension`, `resolution_vs_n`)
 - P0 plotting functions are implemented in `plotting/axes_plots.py`:
   - `plot_alias_map`, `plot_bandpass_curves`, `plot_resolution_vs_n`,
     `plot_radiometer_fit`, `plot_spur_survey`, `plot_iq_phase_trajectory`
@@ -28,9 +26,9 @@ Core spectrum and plotting modules are scaffolded and implemented.
 
 P1 blueprint coverage is now implemented for the remaining figures/tables:
 - Analysis additions:
-  - `analysis/leakage.py` (`leakage_metric`, `leakage_resolution_table`, `nyquist_window_extension`)
-  - `analysis/bandpass.py` (`bandpass_summary_table`)
-  - `analysis/noise.py` (`radiometer_summary_table`)
+  - (leakage/resolution table builders removed — metrics computed inline in notebook)
+  - `analysis/bandpass.py` (summary functions removed — only `bandpass_curve` remains)
+  - `analysis/noise.py` (summary table removed — only `radiometer_fit` remains)
   - `analysis/mixers.py` (`line_spur_catalog`, plus observed-index matching detail)
 - Data I/O and schema infrastructure:
   - `dataio/schema.py` defines and validates T1–T8 table schemas
@@ -229,34 +227,52 @@ Physical acquisition infrastructure for E2 is now implemented:
     interim/processed artifacts, and renders physical F10/F11/F12 outputs inline.
   - Reproducibility appendix now includes the E5 physical pipeline command.
 
-Physical acquisition scripts for E3-E7 are now implemented:
-- New acquisition scripts:
-  - `scripts/acquire/run_e3_acquire.py`
-  - `scripts/acquire/run_e4_acquire.py`
-  - `scripts/acquire/run_e5_acquire.py`
-  - `scripts/acquire/run_e6_acquire.py`
-  - `scripts/acquire/run_e7_acquire.py`
+- E4 post-acquisition data pipeline is implemented:
+  - Reusable module: `src/ugradio_lab1/pipeline/e4.py`
+  - CLI runner: `scripts/analyze/run_e4_pipeline.py`
+  - Pipeline defaults to E3-bootstrap raw input:
+    - default source: `data/raw/e3.tar.gz`
+    - (can also ingest a directory or archive of E4/E3-style NPZ runs)
+  - Generated artifacts:
+    - `data/interim/e4/run_catalog.csv`
+    - `data/interim/e4/qc_catalog.csv`
+    - `data/interim/e4/leakage_metrics.csv`
+    - `data/interim/e4/resolution_curve.csv`
+    - `data/interim/e4/window_spectra.csv`
+    - `data/processed/e4/tables/T2_e4_runs.csv`
+    - `data/processed/e4/tables/T5_e4_leakage_resolution.csv`
+    - `report/figures/F7_leakage_comparison_physical.png`
+    - `report/figures/F8_resolution_vs_n_physical.png`
+    - `report/figures/F9_multi_window_spectra_physical.png`
+- Pipeline unit tests added:
+  - `tests/unit/test_pipeline_e4.py`
+- Notebook integration updates:
+  - `labs/01/01.ipynb` now includes an E4 physical pipeline integration block
+    (`PIPELINE_RUNNER`) that bootstraps E4 analysis from `data/raw/e3.tar.gz`,
+    writes E4 interim/processed artifacts, and renders physical F7/F8/F9 outputs inline.
+  - Reproducibility appendix now includes the E4 physical pipeline command.
+  - E4/E6/E7 physical SOP language in the notebook is aligned with current scope:
+    - E4 physical analysis is E3-bootstrap (`data/raw/e3.tar.gz`).
+    - E6/E7 physical acquisition is marked deferred/post-lab (simulation-first).
+  - Physical pipeline figure persistence is now disabled by default in the notebook:
+    - `SAVE_PHYSICAL_PIPELINE_FIGURES = False`
+    - E1/E2/E3/E4/E5 pipeline cells do not require persisted figure files to rebuild.
+    - Deleting `labs/01/report` is supported; persisted physical figures are only written
+      if the flag is turned on explicitly.
+
+Physical acquisition scripts currently maintained:
+- `scripts/acquire/run_e3_acquire.py`
+- `scripts/acquire/run_e5_acquire.py`
 - Shared helper module:
   - `scripts/acquire/manual_capture_common.py` centralizes:
     - CLI + interactive prompt resolution for required parameters,
     - tone/SG metadata validation,
-    - single-run SDR guarded capture primitive (used by one-shot/sweep runners),
+    - single-run SDR guarded capture primitive,
     - NPZ metadata persistence,
     - T2 manifest append.
-  - E3/E5/E6/E7 are metadata-first manual SG workflows.
-  - E4 now has center-frequency-driven automatic tone planning and supports
-    optional SG USBTMC auto-programming.
-    - New planning helpers: `src/ugradio_lab1/control/e4_planning.py`
-      - `leakage_tone_from_center`
-      - `resolution_tones_from_center`
-    - `run_e4_acquire.py` behavior:
-      - leakage mode uses one SG tone per run:
-        `f = (k + epsilon) * (f_s / N)` (with `k` fixed or auto-derived from center).
-      - resolution mode uses two SG tones per run:
-        `f1 = f_center - delta/2`, `f2 = f_center + delta/2`.
-      - optional SG hardware programming enabled by `--auto-program-siggen`.
-  - Unit tests added for E4 planning math:
-    - `tests/unit/test_control_e4_planning.py`
+- E4, E6, and E7 acquisition entrypoints were removed because current E4
+  analysis is bootstrapped from E3 raw data and E6/E7 physical capture scripts
+  are not in active use.
 
 ## Locked-In API Decisions (Do Not Revert)
 These decisions were requested explicitly by the user:

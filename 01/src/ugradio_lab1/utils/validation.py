@@ -27,4 +27,15 @@ def as_2d_array(values: np.ndarray, name: str, *, dtype: np.dtype | None = None)
     return array
 
 
-__all__ = ["as_1d_array", "as_2d_array"]
+def require_same_length(
+    left: np.ndarray,
+    right: np.ndarray,
+    left_name: str,
+    right_name: str,
+) -> None:
+    """Raise ``ValueError`` if two arrays differ in length."""
+    if left.size != right.size:
+        raise ValueError(f"{left_name} and {right_name} must have the same length.")
+
+
+__all__ = ["as_1d_array", "as_2d_array", "require_same_length"]
